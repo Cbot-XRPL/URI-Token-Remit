@@ -5,6 +5,9 @@
 #include "hookapi.h"
 
 
+//string buf builder ------------------------------------------------------------------------------
+#define SBUF(str) (uint32_t)(str), sizeof(str)
+
 // account buf builder ------------------------------------------------------------------------------
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
@@ -88,28 +91,29 @@ uint8_t txn[60000] =
 
 // HOOK ON ------------------------------------------------------------------------------
 int64_t hook(uint32_t reserved) {
-TRACESTR("URI TOKEN REMIT: Called.");
+TRACESTR("URI TOKEN REMIT: HOOK ON");
+
+ // track incoming transaction to hook account
+ int64_t tt = otxn_type();
+ TRACEVAR(tt);
 
  // define and find hook account
  uint8_t hook_acct[20];
  hook_account(hook_acct, 20);
+ TRACEVAR(hook_acct);
 
  // Check sender of the original txn
  uint8_t sender[20];
- int32_t account_field_len = otxn_field(SBUF(sender), sfAccount);
-
- // track incoming transaction to hook account
-  int64_t tt = otxn_type();
-  TRACEVAR(tt);
+ int32_t account_field_len = otxn_field(SBUF(sender), sfAccount);\
+ TRACEVAR(sender);
 
 
 
- 
+
 
  
- // INVOKE ------------------------------------------------------------------------------
 
- 
+// INVOKE ------------------------------------------------------------------------------
 
 // define and set number buffer and key setting
 uint8_t num_key[3] = {'N', 'U', 'M'};
@@ -130,9 +134,9 @@ uint8_t del_key[3] = {'D', 'E', 'L'};
 uint8_t del_buffer[256];
 int8_t isDel = otxn_param(del_buffer, 1, SBUF(del_key));
 
-// SET URI PARAM TO NAMESPACE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// SET URI PARAM TO NAMESPACE 
 if (tt == 99 && isNum == 1 && isDel != 1 && num_buffer[0] >= 0 ) {
-accept(SBUF("URI TOKEN REMIT: ran invoke"), 1);
+accept(SBUF("URI TOKEN REMIT: INVOKE"), 2);
 TRACEVAR(tt);
  
 //find uri buffer lenght
@@ -151,29 +155,35 @@ TRACEHEX(uri_buffer);
  
 //
 state_set(SBUF(uri_buffer), num_buffer, 32);
-accept(SBUF("URI TOKEN REMIT: ran invoke"), 1);
- 
+accept(SBUF("URI TOKEN REMIT: URI token added to state"), 3);
 
+}
+
+// PAYMENT AND REMIT ------------------------------------------------------------------------------
 if (tt == 0) {
 
-// PAYMENT ------------------------------------------------------------------------------
 
-    accept(SBUF("URI TOKEN REMIT: ran payment"), 2);
+if (state(SBUF(vault), SBUF(vault_key)) != 16)
+		rollback(SBUF("Error: could not read state!"), 4);
+TRACEVAR(vault);
+TRACEVAR(vault_key);
+    
 
-    PREPARE_REMIT_TXN(hook_acct, sender, uri_buffer, uri_len);
+ 
 
-    // TXN: Emit/Send Txn
+// TXN: Emit/Send Txn
+ PREPARE_REMIT_TXN(hook_acct, sender, uri_buffer, uri_len);
     uint8_t emithash[32];
     int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + uri_len + 1);
     if (emit_result > 0)
     {
-        accept(SBUF("URI TOKEN REMIT: Tx emitted success."), __LINE__);
+        accept(SBUF("URI TOKEN REMIT: Tx emitted success."),5);
     }
-    accept(SBUF("URI TOKEN REMIT: Tx emitted failure."), __LINE__);
+    accept(SBUF("URI TOKEN REMIT: Tx emitted failure."),6);
 
 }
 
-}
+
 
     _g(1,1);
     return 0;
