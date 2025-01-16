@@ -94,6 +94,10 @@ TRACESTR("URI TOKEN REMIT: Called.");
  uint8_t hook_acct[20];
  hook_account(hook_acct, 20);
 
+ // Check sender of the original txn
+ uint8_t sender[20];
+ int32_t account_field_len = otxn_field(SBUF(sender), sfAccount);
+
  // track incoming transaction to hook account
   int64_t tt = otxn_type();
   TRACEVAR(tt);
@@ -148,25 +152,15 @@ TRACEHEX(uri_buffer);
 //
 state_set(SBUF(uri_buffer), num_buffer, 32);
 accept(SBUF("URI TOKEN REMIT: ran invoke"), 1);
-
-
  
- //SET DST BUFFER and KEY  ----------------------------------------------------------------------------
-uint8_t dest_acc[20];
-uint8_t dest_key[3] = { 'D', 'S', 'T' };
- if (otxn_param(SBUF(dest_acc), SBUF(dest_key)) != 20)
-   {
-      rollback(SBUF("URI TOKEN REMIT: Invalid Txn Parameter `DST`"), __LINE__);
-   }
-    TRACEHEX(dest_acc);
 
+if (tt == 0) {
 
 // PAYMENT ------------------------------------------------------------------------------
 
-
     accept(SBUF("URI TOKEN REMIT: ran payment"), 2);
 
-    PREPARE_REMIT_TXN(hook_acct, dest_acc, uri_buffer, uri_len);
+    PREPARE_REMIT_TXN(hook_acct, sender, uri_buffer, uri_len);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
@@ -179,7 +173,7 @@ uint8_t dest_key[3] = { 'D', 'S', 'T' };
 
 }
 
-
+}
 
     _g(1,1);
     return 0;
