@@ -182,9 +182,7 @@ TRACEVAR(vault_key);
     accept(SBUF("URI TOKEN REMIT: Tx emitted failure."),6);
 
 }
-
-
-
     _g(1,1);
     return 0;
 }
+
