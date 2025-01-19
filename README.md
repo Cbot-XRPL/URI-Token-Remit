@@ -3,7 +3,7 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This C hook is desgined to automasly distribute RWA (real world asssts) or NFTs based on the Xahau hook rule engine. rental contracts and digital art are some basic example of the use of this hook. This hook is ideal for use by real estate transactions or even by digital products.
+This C hook is desgined to automasly distribute RWA (real world asssts) or NFTs based on the Xahau hook rule engine. This hook is ideal for use by real estate transactions or even by digital products. You can find our Fine Art Agent example of this hook on Mainnet at address: and our Rental Contracts Rule engine on testnet installed at address:.
 
 ## What Does This Hook do
 
