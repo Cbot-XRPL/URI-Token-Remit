@@ -140,13 +140,17 @@ TRACEHEX(uri_buffer);
 TRACEHEX(dest_acc);
 TRACEVAR(num_len);
 TRACEVAR(isNum);
-    accept(SBUF("minter: Invoke Ran."), __LINE__);
-    
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+
+
+
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set state!"), 1);
-       
+
+accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
+
 
 
     }
@@ -154,6 +158,14 @@ if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
 
    // HookOn: Invoke
     if (tt == ttPAYMENT){ // ttINVOKE only
+
+
+ #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state(SBUF(uri_buffer), SBUF(num_buf)) >= 0)
+		rollback(SBUF("Error: could not read state!"), 1);
+
+ accept(SBUF("txn_remit_mint.c: WE READ THE STATE."), __LINE__);
+
 
     PREPARE_REMIT_TXN(hook_acct, dest_acc, uri_buffer, uri_len);
 
@@ -171,4 +183,3 @@ if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
     _g(1,1);
     return 0;
 }
-
