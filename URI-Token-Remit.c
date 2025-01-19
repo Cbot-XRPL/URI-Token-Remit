@@ -90,6 +90,10 @@ int64_t hook(uint32_t reserved) {
     uint8_t hook_acct[20];
     hook_account(hook_acct, 20);
 
+       // ACCOUNT: Origin Tx Account
+    uint8_t otx_acc[20];
+    otxn_field(otx_acc, 20, sfAccount);
+
 
 // To know the type of origin txn
     int64_t tt = otxn_type();
@@ -118,12 +122,7 @@ int64_t hook(uint32_t reserved) {
     
 
 
-        uint8_t dest_acc[20];
-    uint8_t dest_key[3] = { 'D', 'S', 'T' };
-    if (otxn_param(SBUF(dest_acc), SBUF(dest_key)) != 20)
-    {
-        rollback(SBUF("txn_remit_mint.c: Invalid Txn Parameter `DST`"), __LINE__);
-    }
+  
     
 
 
@@ -133,17 +132,10 @@ int64_t hook(uint32_t reserved) {
 
 
     // HookOn: Invoke
-    if (tt == ttINVOKE){ // ttINVOKE only
+    if (tt == 99 && num_buf > 0){ // ttINVOKE only
 
-TRACEVAR(uri_len);
+TRACEHEX(num_buf);
 TRACEHEX(uri_buffer);
-TRACEHEX(dest_acc);
-TRACEVAR(num_len);
-TRACEVAR(isNum);
-
-
-
-
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
@@ -157,17 +149,22 @@ accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
 
 
    // HookOn: Invoke
-    if (tt == ttPAYMENT){ // ttINVOKE only
+    if (tt == 0){ // ttINVOKE only
 
 
  #define SBUF(str) (uint32_t)(str), sizeof(str)
+ 
 if (state(SBUF(uri_buffer), SBUF(num_buf)) >= 0)
 		rollback(SBUF("Error: could not read state!"), 1);
 
- accept(SBUF("txn_remit_mint.c: WE READ THE STATE."), __LINE__);
+TRACEHEX(num_buf);
+TRACEHEX(uri_buffer);
+
+ accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
 
 
-    PREPARE_REMIT_TXN(hook_acct, dest_acc, uri_buffer, uri_len);
+
+    PREPARE_REMIT_TXN(hook_acct, otx_acc, uri_buffer, uri_len);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
