@@ -1,14 +1,9 @@
 /**
  * 
  */
- 
+
 #include "hookapi.h"
 
-
-//string buf builder ------------------------------------------------------------------------------
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-
-// account buf builder ------------------------------------------------------------------------------
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
     unsigned char* buf = (unsigned char*)buf_raw;\
@@ -17,7 +12,6 @@
     *(uint32_t*)(buf + 16) = *(uint32_t*)(i + 16);\
 }
 
-// uri buffer builder ------------------------------------------------------------------------------
 #define URI_TO_BUF(buf_raw, uri, len)\
 {\
     unsigned char* buf = (unsigned char*)buf_raw;\
@@ -25,8 +19,7 @@
         *(((uint64_t*)buf) + i) = *(((uint64_t*)uri) + i); \
     buf[len + 1] += 0xE1U; \
 }
-
-// byte settings for tx builder ------------------------------------------------------------------------------
+// 08697066733A2F2F32
 
 // clang-format off
 uint8_t txn[60000] =
@@ -52,7 +45,7 @@ uint8_t txn[60000] =
 };
 // clang-format on
 
-// TX BUILDER ------------------------------------------------------------------------------
+// TX BUILDER
 #define BYTES_LEN 238U
 #define FLS_OUT (txn + 20U)
 #define LLS_OUT (txn + 26U)
@@ -89,99 +82,92 @@ uint8_t txn[60000] =
 } while(0) 
 // clang-format on
 
-// HOOK ON ------------------------------------------------------------------------------
 int64_t hook(uint32_t reserved) {
-TRACESTR("URI TOKEN REMIT: HOOK ON");
 
- // track incoming transaction to hook account
- int64_t tt = otxn_type();
- TRACEVAR(tt);
+    TRACESTR("txn_remit_mint.c: Called.");
 
- // define and find hook account
- uint8_t hook_acct[20];
- hook_account(hook_acct, 20);
- TRACEVAR(hook_acct);
+    // ACCOUNT: Hook Account
+    uint8_t hook_acct[20];
+    hook_account(hook_acct, 20);
 
- // Check sender of the original txn
- uint8_t sender[20];
- int32_t account_field_len = otxn_field(SBUF(sender), sfAccount);\
- TRACEVAR(sender);
+
+// To know the type of origin txn
+    int64_t tt = otxn_type();
+    TRACEVAR(tt)
 
 
 
 
-
+  uint8_t num_buf[8];
+  uint8_t num_key[3] = { 'N', 'U', 'M'};
+  int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
+  uint64_t num_len = UINT64_FROM_BUF(num_buf);
  
 
-// INVOKE ------------------------------------------------------------------------------
-
-// define and set number buffer and key setting
-uint8_t num_key[3] = {'N', 'U', 'M'};
-uint8_t num_buffer[20] = {0x00U};
-int8_t isNum = otxn_param(num_buffer, 1, SBUF(num_key));
- 
-// define and set uril buffer and key settings
-uint8_t uril_buffer[8];
-uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
-otxn_param(SBUF(uril_buffer), SBUF(uril_key));
-
-//define uri key and arbatray buffer
-uint8_t uri_key[3] = { 'U', 'R', 'I' };
-uint8_t uri_buffer[256];
- 
-//define and set uri delete key and arbatray uri buffer
-uint8_t del_key[3] = {'D', 'E', 'L'};
-uint8_t del_buffer[256];
-int8_t isDel = otxn_param(del_buffer, 1, SBUF(del_key));
-
-// SET URI PARAM TO NAMESPACE 
-if (tt == 99 && isNum == 1 && isDel != 1 && num_buffer[0] >= 0 ) {
-accept(SBUF("URI TOKEN REMIT: INVOKE"), 2);
-TRACEVAR(tt);
- 
-//find uri buffer lenght
-otxn_param(SBUF(uril_buffer), SBUF(uril_key));
- 
-//set lenght variable to proper bytes format
-uint64_t uri_len = UINT64_FROM_BUF(uril_buffer);
-TRACEVAR(uri_len);
- 
-//correct uri buffer settings to accomidate uri lenght
-uri_buffer[0] = uri_len;
-
-//set uri buffer and key settings
-otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
-TRACEHEX(uri_buffer);
- 
-//
-state_set(SBUF(uri_buffer), num_buffer, 32);
-accept(SBUF("URI TOKEN REMIT: URI token added to state"), 3);
-
-}
-
-// PAYMENT AND REMIT ------------------------------------------------------------------------------
-if (tt == 0) {
-
-
-if (state(SBUF(vault), SBUF(vault_key)) != 16)
-		rollback(SBUF("Error: could not read state!"), 4);
-TRACEVAR(vault);
-TRACEVAR(vault_key);
+     uint8_t uril_buf[8];
+    uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
+    otxn_param(SBUF(uril_buf), SBUF(uril_key));
+    uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
     
 
- 
 
-// TXN: Emit/Send Txn
- PREPARE_REMIT_TXN(hook_acct, sender, uri_buffer, uri_len);
+    uint8_t uri_buffer[256];
+    uri_buffer[0] = uri_len;
+    uint8_t uri_key[3] = { 'U', 'R', 'I' };
+    otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+    
+
+
+        uint8_t dest_acc[20];
+    uint8_t dest_key[3] = { 'D', 'S', 'T' };
+    if (otxn_param(SBUF(dest_acc), SBUF(dest_key)) != 20)
+    {
+        rollback(SBUF("txn_remit_mint.c: Invalid Txn Parameter `DST`"), __LINE__);
+    }
+    
+
+
+
+
+
+
+
+    // HookOn: Invoke
+    if (tt == ttINVOKE){ // ttINVOKE only
+
+TRACEVAR(uri_len);
+TRACEHEX(uri_buffer);
+TRACEHEX(dest_acc);
+TRACEVAR(num_len);
+TRACEVAR(isNum);
+    accept(SBUF("minter: Invoke Ran."), __LINE__);
+    
+
+#define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
+		rollback(SBUF("Error: could not set state!"), 1);
+       
+
+
+    }
+
+
+   // HookOn: Invoke
+    if (tt == ttPAYMENT){ // ttINVOKE only
+
+    PREPARE_REMIT_TXN(hook_acct, dest_acc, uri_buffer, uri_len);
+
+    // TXN: Emit/Send Txn
     uint8_t emithash[32];
     int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + uri_len + 1);
     if (emit_result > 0)
     {
-        accept(SBUF("URI TOKEN REMIT: Tx emitted success."),5);
+        accept(SBUF("txn_remit_mint.c: Tx emitted success."), __LINE__);
     }
-    accept(SBUF("URI TOKEN REMIT: Tx emitted failure."),6);
+    accept(SBUF("txn_remit_mint.c: Tx emitted failure."), __LINE__);
 
 }
+
     _g(1,1);
     return 0;
 }
