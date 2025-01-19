@@ -22,28 +22,30 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 ## Adding URIs
 
-This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number KEY used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path. the BURI can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
+This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number KEY used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
 
 ### URI Parmeters
 
 BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string
+BURIL: The lenght in bytes of the BURI
 KEY: Add a number key up to 20 bytes to your URI for security, sorting, and deletion
 DEL: List the number key of the URI you want to delete
 
 To add and remove URI staged for minting you will use ```TTINVOKE ``` transactions on the hook account with the Hook parameters:
 
-**Example:** of params to add with an invoke tranction on the hook tool kit
+**Example:** of params before hexing
 
 - BURI: 68747470733A2F2F746573742F
+- BURIL: 14
 - KEY: 01
 
- **Example:** of params onchain submisson
-
-To use onchain we need convert the ADD and NUM keywords to hex. ADD = 414444 and NUM = 4E554D.
+ **Example:**nof params to add after they have been hexxed
 
 - 414444: D53F733E54B866B9FBDB85762071832B03A56C76
 - 4E554D: 00
 
+
+ **Example:** on chain submisson
 ```
     const prepared = {
       TransactionType: "Invoke",
