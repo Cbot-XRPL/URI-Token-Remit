@@ -7,7 +7,7 @@ This C hook is desgined to automasly distribute RWA (real world asssts) or NFTs 
 
 ## What Does This Hook do
 
-The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
+The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary HOOKON fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
 
 ## Tools
 
@@ -22,31 +22,50 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 ## Adding URIs
 
-To add and remove URI staged for minting you will use Invoke transactions on the hook account with the Hook parameters and values outline herein:
+This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number KEY used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path. the BURI can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
 
-This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path. the BURI can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
+### URI Parmeters
 
+BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string
+KEY: Add a number key up to 20 bytes to your URI for security, sorting, and deletion
+DEL: List the number key of the URI you want to delete
 
-BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string.
-URI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string.
-NUM: Add a number key up to 20 bytes to your URI for sorting and deletion
-
-
+To add and remove URI staged for minting you will use ```TTINVOKE ``` transactions on the hook account with the Hook parameters:
 
 **Example:** of params to add with an invoke tranction on the hook tool kit
 
-- BURI:
-- URI:
-- NUM:
+- BURI: 68747470733A2F2F746573742F
+- KEY: 01
 
  **Example:** of params onchain submisson
 
-We need convert the ADD and NUM keywords to hex. ADD = 414444 and NUM = 4E554D.
+To use onchain we need convert the ADD and NUM keywords to hex. ADD = 414444 and NUM = 4E554D.
 
 - 414444: D53F733E54B866B9FBDB85762071832B03A56C76
 - 4E554D: 00
 
-
+```
+    const prepared = {
+      TransactionType: "Invoke",
+      Account: your_account_address,
+      Flags: 0,
+      HookParameters: [
+        {
+          HookParameter: {
+            HookParameterName: "414444",
+            HookParameterValue: "D53F733E54B866B9FBDB85762071832B03A56C76",
+          },
+        },
+        {
+          HookParameter: {
+            HookParameterName: "4E554D",
+            HookParameterValue: "00",
+          },
+        },
+      ],
+      ...networkInfo.txValues,
+    };
+```
 
 ## How to install the URI Token Remit Hook?
 
@@ -92,61 +111,9 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       ...networkInfo.txValues,
     };
 
-## How to add an URI?
 
-The hook allows up to 10 addresses to which the amounts received can be distributed in equal parts. They will be registered with an identifier from 00 to 09. The addresses must be converted to Account ID. To do this you can use the following services:
 
-- https://hooks.services/tools/raddress-to-accountid 
-- https://transia-rnd.github.io/xrpl-hex-visualizer
 
-To check if you are doing it right, address: rBnGX5KRERL2vMtZU2hDpF4osbhvichmvn will be translated to 6E7FE292948037180F3646CC248FAF2BCACD59893C
-
-**Visual representation of the namespace or address book:**
-
-|identifier|address|
-|-----------|-------|
-|01|address1 translated to AccountID|
-|02|address2 translated to AccountID|
-|03|address3 translated to AccountID|
-|..|..                              |
-|09|address9 translated to AccountID|
-
-To add an account we must create an Invoke transaction from the hook account and add the following Hook parameters and values:
-
-ADD with the AccountID
-NUM with the position we want between 00 to 09
-
-**Example:**
-
-- ADD: D53F733E54B866B9FBDB85762071832B03A56C76
-- NUM: 00
-
-We need to change ADD and NUM keywords to hex. ADD = 414444 and NUM = 4E554D.
-Also, we need to translate address account rLSYATPWj9UECGBEeVpxwEN16CuEREK3uR to AccountID D53F733E54B866B9FBDB85762071832B03A56C76
-
-- 414444: D53F733E54B866B9FBDB85762071832B03A56C76
-- 4E554D: 00
-
-    const prepared = {
-      TransactionType: "Invoke",
-      Account: your_account_address,
-      Flags: 0,
-      HookParameters: [
-        {
-          HookParameter: {
-            HookParameterName: "414444",
-            HookParameterValue: "D53F733E54B866B9FBDB85762071832B03A56C76",
-          },
-        },
-        {
-          HookParameter: {
-            HookParameterName: "4E554D",
-            HookParameterValue: "00",
-          },
-        },
-      ],
-      ...networkInfo.txValues,
-    };
 
 ## How to delete addresses?
 
