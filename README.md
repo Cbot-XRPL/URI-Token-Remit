@@ -3,25 +3,33 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hooks is desgined to automasly distribute RWA (real world asssts) or NFTs based on the Xahau hook rule engine. rental contracts and digital art are some basic example of the use of this hook.
+This C hook is desgined to automasly distribute RWA (real world asssts) or NFTs based on the Xahau hook rule engine. rental contracts and digital art are some basic example of the use of this hook. This hook is ideal for use by real estate transactions or even by digital products.
 
+## What Does This Hook do
 
+The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
 
 ## Tools
 
-hook and statr tracking https://xahau-testnet.xrplwin.com/account/
-xahau docshttps://docs.xahau.network/technical/hooks-c-functions/state/state
+ [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
+
+ [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
+
+ [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
+
+ [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
-## How to install the Forwarder Hook on Testnet?
 
-This Hookhash only works for Testnet. The Hookhash is 1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494
+## How to install the URI Token Remit Hook?
 
-1. You can do it by [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
+The Hookhash is 1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494
+
+1. You can do it with the tool at [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
 2. Or you can do it sending the transaction below:
 
-HookOn is activated to trigger for Invoke, Payment and URIToken_Buy. You can verify it copying the HookOn value (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE) in this website: https://richardah.github.io/xrpl-hookon-calculator/
+Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy transaction happens. You can verify iyour HookOn value (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE) in this website: [Richards Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
     const prepared = {
       "TransactionType": "SetHook",
@@ -57,7 +65,7 @@ HookOn is activated to trigger for Invoke, Payment and URIToken_Buy. You can ver
       ...networkInfo.txValues,
     };
 
-## How to add addresses?
+## How to add an URI?
 
 The hook allows up to 10 addresses to which the amounts received can be distributed in equal parts. They will be registered with an identifier from 00 to 09. The addresses must be converted to Account ID. To do this you can use the following services:
 
