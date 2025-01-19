@@ -20,6 +20,33 @@ The hook is installed on an account. URI's can then be added/removed from the ho
  [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
+## Adding URIs
+
+To add and remove URI staged for minting you will use Invoke transactions on the hook account with the Hook parameters and values outline herein:
+
+This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path. the BURI can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
+
+
+BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string.
+URI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string.
+NUM: Add a number key up to 20 bytes to your URI for sorting and deletion
+
+
+
+**Example:** of params to add with an invoke tranction on the hook tool kit
+
+- BURI:
+- URI:
+- NUM:
+
+ **Example:** of params onchain submisson
+
+We need convert the ADD and NUM keywords to hex. ADD = 414444 and NUM = 4E554D.
+
+- 414444: D53F733E54B866B9FBDB85762071832B03A56C76
+- 4E554D: 00
+
+
 
 ## How to install the URI Token Remit Hook?
 
@@ -178,10 +205,8 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
       ...networkInfo.txValues,
     };
 ```
-## Video Tutorial
 
-The user @[ainittomai](https://www.x.com/ainittomai) has created a video tutorial to learn how to use this hook on Xahau Testnet: [https://www.youtube.com/watch?v=rf8zSmrZkPA](https://www.youtube.com/watch?v=rf8zSmrZkPA)
 
 ## Last Thoughts
 
-Created by @[ekiserrepe](https://x.com/ekiserrepe). You can find more of my projects on [ekiserrepe.com](https://www.ekiserrepe.com)
+Created by @[cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com)
