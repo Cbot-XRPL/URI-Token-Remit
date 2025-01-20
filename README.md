@@ -19,25 +19,27 @@ This hook is requires your metadata files for the URIs to be available at one ba
 
 **URI:** Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string before use in hook params.
 
-**URIL** The lenght in bytes of the URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
+**URIL:** The lenght in bytes of the URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed.
 
-**NUM:** A number key in the hook for URI sorting. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your number to a unit64 before use in hook params. A small handful of numbers are already allocated to setting for this hook 999999-999991 do not use hex and use numbers in this range for URIs it will disrute the use of this hook.
+**NUM:** A number key saved with your URI in hook state. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your number to a unit64 before use in hook params. A small handful of numbers are already allocated to setting for this hook 999999-999991 do not use hex and use numbers in this range for URIs it will disrute the use of this hook.
 
-**DEL:** List the number key of the URI you want to delete
+**DEL:** List the number key of the hook state you want to delete
 
-To add and remove URI staged for minting you will use ```TTINVOKE ``` transactions on the hook account with the Hook parameters:
+To add and remove state for this hook you will use ```TTINVOKE ``` transactions on the account with the parameter you intend to set:
 
 **Example:** of params before hexing
 
 - URI: 68747470733A2F2F746573742F
 - URIL: 14
 - NUM: 01
+- DEL: 01
 
- **Example:**nof params to add after they have been hexxed
+ **Example:** of params to add after they have been hexxed
 
 - URI: 68747470733A2F2F746573742F
 - URIL: 000000000000000E
 - NUM: 0000000000000001
+- DEL: 0000000000000001
 
  **Example:** on chain submisson
 ```
