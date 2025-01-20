@@ -9,27 +9,21 @@ This C hook is desgined to automasly distribute RWA (real world asssts) or NFTs 
 
 The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary HOOKON fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
 
-## Tools
-
- [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
-
- [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
-
- [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
-
- [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
 ## Adding URIs
 
 This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a URI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
 
-### URI Parmeters
+## HOOKParmeters
 
-- URI: Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string before use in hook params.
-- URIL: The lenght in bytes of the URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
-- NUM: A number key in the hook for URI sorting. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your number to a unit64 before use in hook params. A small handful of numbers are already allocated to setting for this hook 999999-999991 do not use hex and use numbers in this range for URIs it will disrute the use of this hook.
-- DEL: List the number key of the URI you want to delete
+**URI:** Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string before use in hook params.
+
+**URIL** The lenght in bytes of the URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
+
+**NUM** A number key in the hook for URI sorting. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your number to a unit64 before use in hook params. A small handful of numbers are already allocated to setting for this hook 999999-999991 do not use hex and use numbers in this range for URIs it will disrute the use of this hook.
+
+**DEL:** List the number key of the URI you want to delete
 
 To add and remove URI staged for minting you will use ```TTINVOKE ``` transactions on the hook account with the Hook parameters:
 
@@ -174,6 +168,16 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
       ...networkInfo.txValues,
     };
 ```
+
+## Tools
+
+ [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
+
+ [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
+
+ [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
+
+ [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
 ## Last Thoughts
