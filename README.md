@@ -22,12 +22,12 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 ## Adding URIs
 
-This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number KEY used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a BURI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
+This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a URI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
 
 ### URI Parmeters
 
 - URI: Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string before use in hook params.
-- URIL: The lenght in bytes of the URI / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
+- URIL: The lenght in bytes of the URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
 - NUM: A number key in the hook for sorting. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
 - DEL: List the number key of the URI you want to delete
 
@@ -35,15 +35,15 @@ To add and remove URI staged for minting you will use ```TTINVOKE ``` transactio
 
 **Example:** of params before hexing
 
-- BURI: 68747470733A2F2F746573742F
-- BURIL: 14
-- KEY: 01
+- URI: 68747470733A2F2F746573742F
+- URIL: 14
+- NUM: 01
 
  **Example:**nof params to add after they have been hexxed
 
-- 414444: D53F733E54B866B9FBDB85762071832B03A56C76
-- 4E554D: 00
-
+- URI: 68747470733A2F2F746573742F
+- URIL: 000000000000000E
+- NUM: 0000000000000001
 
  **Example:** on chain submisson
 ```
