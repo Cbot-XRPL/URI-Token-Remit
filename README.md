@@ -26,10 +26,10 @@ This hook is requires your metadata files for the URIs to be available at one ba
 
 ### URI Parmeters
 
-BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string
-BURIL: The lenght in bytes of the BURI
-KEY: Add a number key up to 20 bytes to your URI for security, sorting, and deletion
-DEL: List the number key of the URI you want to delete
+-BURI: Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string
+-BURIL: The lenght in bytes of the BURI
+-KEY: Add a number key up to 20 bytes to your URI for security, sorting, and deletion
+-DEL: List the number key of the URI you want to delete
 
 To add and remove URI staged for minting you will use ```TTINVOKE ``` transactions on the hook account with the Hook parameters:
 
