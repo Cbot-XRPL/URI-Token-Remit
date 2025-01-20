@@ -1,9 +1,7 @@
-/**
- * 
- */
 
 #include "hookapi.h"
 
+// Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
     unsigned char* buf = (unsigned char*)buf_raw;\
@@ -12,6 +10,7 @@
     *(uint32_t*)(buf + 16) = *(uint32_t*)(i + 16);\
 }
 
+// URI buffer builder for tx
 #define URI_TO_BUF(buf_raw, uri, len)\
 {\
     unsigned char* buf = (unsigned char*)buf_raw;\
@@ -19,9 +18,10 @@
         *(((uint64_t*)buf) + i) = *(((uint64_t*)uri) + i); \
     buf[len + 1] += 0xE1U; \
 }
-// 08697066733A2F2F32
 
-// clang-format off
+
+
+// clang-format off tx sizing
 uint8_t txn[60000] =
 {
 /* size,upto */
@@ -56,7 +56,7 @@ uint8_t txn[60000] =
 #define URI_OUT (txn + 237U)
 #define EMIT_OUT (txn + 118U)
 
-// clang-format off
+// clang-format off prepare remit tx
 #define PREPARE_REMIT_TXN(account_buffer, dest_buffer, uri_buffer, uri_len) do { \ 
     etxn_reserve(1); \ 
     if (otxn_field(DTAG_OUT, 4, sfSourceTag) == 4) \
@@ -82,25 +82,29 @@ uint8_t txn[60000] =
 } while(0) 
 // clang-format on
 
+
+
+// START OF THE HOOK ACTIVATION
+
 int64_t hook(uint32_t reserved) {
 
-    TRACESTR("txn_remit_mint.c: Called.");
+TRACESTR("txn_remit_mint.c: Called.");
 
-    // ACCOUNT: Hook Account
-    uint8_t hook_acct[20];
-    hook_account(hook_acct, 20);
+// ACCOUNT: Hook Account
+uint8_t hook_acct[20];
+hook_account(hook_acct, 20);
 
-       // ACCOUNT: Origin Tx Account
-    uint8_t otx_acc[20];
-    otxn_field(otx_acc, 20, sfAccount);
+// ACCOUNT: Origin Tx Account
+uint8_t otx_acc[20];
+otxn_field(otx_acc, 20, sfAccount);
 
 
 // To know the type of origin txn
-    int64_t tt = otxn_type();
-    TRACEVAR(tt)
+int64_t tt = otxn_type();
+TRACEVAR(tt)
 
 
-
+// Configure Params
 
   uint8_t num_buf[8];
   uint8_t num_key[3] = { 'N', 'U', 'M'};
@@ -116,7 +120,7 @@ int64_t hook(uint32_t reserved) {
 
     uint8_t uril_buf[8];
     uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
-    otxn_param(SBUF(uril_buf), SBUF(uril_key));
+    uint8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
     uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
     
 
@@ -124,14 +128,28 @@ int64_t hook(uint32_t reserved) {
     uint8_t uri_buffer[256];
     uri_buffer[0] = uri_len;
     uint8_t uri_key[3] = { 'U', 'R', 'I' };
-    otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+    uint8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
     
 
+
+   // HookOn: Invoke Set URIL State
+    if (tt == 99 && isUril > 0 && isUri <= 0){ 
+
+TRACEHEX( num_buf);
+TRACEHEX(uril_buf);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(uril_buf), SBUF(num_buf)) < 0)
+		rollback(SBUF("Error: could not set state!"), 1);
+
+accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
+
+    }
 
   
     
-   // HookOn: Invoke
-    if (tt == 99 && isNum > 0){ // ttINVOKE only
+   // HookOn: Invoke Set State
+    if (tt == 99 && isNum > 0 && isDel <= 0){ 
 
 TRACEHEX(num_buf);
 TRACEHEX(uri_buffer);
@@ -152,8 +170,8 @@ accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
 
 
 
-    // HookOn: Invoke
-    if (tt == 99 && isDel > 0){ // ttINVOKE only
+    // HookOn: Invoke Delete State
+    if (tt == 99 && isDel > 0){
 
 TRACEHEX(del_buf);
 
@@ -173,14 +191,15 @@ accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
 
 
-   // HookOn: Invoke
-    if (tt == 0){ // ttINVOKE only
+   // HookOn: Incoming Payment
+    if (tt == 00){ 
 
 
  #define SBUF(str) (uint32_t)(str), sizeof(str)
  
 if (state(SBUF(uri_buffer), SBUF(num_buf)) >= 0)
 		rollback(SBUF("Error: could not read state!"), 1);
+
 
 TRACEHEX(num_buf);
 TRACEHEX(uri_buffer);
@@ -201,6 +220,9 @@ TRACEHEX(uri_buffer);
     accept(SBUF("txn_remit_mint.c: Tx emitted failure."), __LINE__);
 
 }
+
+
+//final gaurds
 
     _g(1,1);
     return 0;
