@@ -3,98 +3,8 @@
  */
 
 #include "hookapi.h"
-#include <stdint.h>
 
-
-int64_t hook(uint32_t reserved) {
-
-    TRACESTR("txn_remit_mint.c: Called.");
-
-    // ACCOUNT: Hook Account
-    uint8_t hook_acct[20];
-    hook_account(hook_acct, 20);
-
-       // ACCOUNT: Origin Tx Account
-    uint8_t otx_acc[20];
-    otxn_field(otx_acc, 20, sfAccount);
-
-
-// To know the type of origin txn
-    int64_t tt = otxn_type();
-    TRACEVAR(tt)
-
-
-
-
-  uint8_t num_buf[20] = {0x00U};
-  uint8_t num_key[3] = { 'N', 'U', 'M'};
-  int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-  uint64_t num_len = UINT64_FROM_BUF(num_buf);
- 
-
-     uint8_t uril_buf[8];
-    uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
-    otxn_param(SBUF(uril_buf), SBUF(uril_key));
-    uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-    
-
-
-    uint8_t uri_buffer[256];
-    uri_buffer[0] = uri_len;
-    uint8_t uri_key[3] = { 'U', 'R', 'I' };
-    otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
-    
-
-
-  
-    
-
-
-
-
-
-
-
-    // HookOn: Invoke
-    if (tt == 99 && num_buf > 0){ // ttINVOKE only
-
-
-TRACEHEX(num_buf);
-TRACEHEX(uri_buffer);
-
-   #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uri_buffer),1, num_buf) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
-
-accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
-
-
-
-    }
-
-
-   // HookOn: Invoke
-    if (tt == 0){ // ttPAYMENT only
-
-int8_t vault_key = 01;
-
-
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uri_buffer), SBUF(vault_key)) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
-	
-
-TRACEHEX(num_buf);
-TRACEHEX(uri_buffer);
-
- accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
-
-
-
-
-
-
- #define ACCOUNT_TO_BUF(buf_raw, i)\
+#define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
     unsigned char* buf = (unsigned char*)buf_raw;\
     *(uint64_t*)(buf + 0) = *(uint64_t*)(i +  0);\
@@ -172,6 +82,110 @@ uint8_t txn[60000] =
 } while(0) 
 // clang-format on
 
+int64_t hook(uint32_t reserved) {
+
+    TRACESTR("txn_remit_mint.c: Called.");
+
+    // ACCOUNT: Hook Account
+    uint8_t hook_acct[20];
+    hook_account(hook_acct, 20);
+
+       // ACCOUNT: Origin Tx Account
+    uint8_t otx_acc[20];
+    otxn_field(otx_acc, 20, sfAccount);
+
+
+// To know the type of origin txn
+    int64_t tt = otxn_type();
+    TRACEVAR(tt)
+
+
+
+
+  uint8_t num_buf[8];
+  uint8_t num_key[3] = { 'N', 'U', 'M'};
+  int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
+  uint64_t num_len = UINT64_FROM_BUF(num_buf);
+
+
+  uint8_t del_buf[8];
+  uint8_t del_key[3] = { 'D', 'E', 'L'};
+  int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
+  uint64_t del_len = UINT64_FROM_BUF(del_buf);
+ 
+
+    uint8_t uril_buf[8];
+    uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
+    otxn_param(SBUF(uril_buf), SBUF(uril_key));
+    uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
+    
+
+
+    uint8_t uri_buffer[256];
+    uri_buffer[0] = uri_len;
+    uint8_t uri_key[3] = { 'U', 'R', 'I' };
+    otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+    
+
+
+  
+    
+   // HookOn: Invoke
+    if (tt == 99 && isNum > 0){ // ttINVOKE only
+
+TRACEHEX(num_buf);
+TRACEHEX(uri_buffer);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
+		rollback(SBUF("Error: could not set state!"), 1);
+
+accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
+
+
+
+    }
+
+
+
+
+
+
+
+    // HookOn: Invoke
+    if (tt == 99 && isDel > 0){ // ttINVOKE only
+
+TRACEHEX(del_buf);
+
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(0,0, SBUF(del_buf)) < 0)
+		rollback(SBUF("Error: could not set state!"), 1);
+
+accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
+
+
+
+    }
+
+
+
+
+
+
+   // HookOn: Invoke
+    if (tt == 0){ // ttINVOKE only
+
+
+ #define SBUF(str) (uint32_t)(str), sizeof(str)
+ 
+if (state(SBUF(uri_buffer), SBUF(num_buf)) >= 0)
+		rollback(SBUF("Error: could not read state!"), 1);
+
+TRACEHEX(num_buf);
+TRACEHEX(uri_buffer);
+
+ accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
 
 
 
