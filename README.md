@@ -26,8 +26,8 @@ This hook is requires your metadata files for the URIs to be available at one ba
 
 ### URI Parmeters
 
-- URI: Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string
-- URIL: The lenght in bytes of the URI
+- URI: Pointer to your asset. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a hex string before use in hook params.
+- URIL: The lenght in bytes of the URI / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
 - NUM: A number key in the hook for sorting. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your BURI to a unit64 before use in hook params.
 - DEL: List the number key of the URI you want to delete
 
