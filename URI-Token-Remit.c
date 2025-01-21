@@ -19,19 +19,6 @@
     buf[len + 1] += 0xE1U; \
 }
 
-//unit64 to buffer arry
-#define UINT64_TO_BUF_LE(value, buf)          \
-    do {                                      \
-        (buf)[0] = (uint8_t)((value) & 0xFF); \
-        (buf)[1] = (uint8_t)(((value) >> 8) & 0xFF); \
-        (buf)[2] = (uint8_t)(((value) >> 16) & 0xFF); \
-        (buf)[3] = (uint8_t)(((value) >> 24) & 0xFF); \
-        (buf)[4] = (uint8_t)(((value) >> 32) & 0xFF); \
-        (buf)[5] = (uint8_t)(((value) >> 40) & 0xFF); \
-        (buf)[6] = (uint8_t)(((value) >> 48) & 0xFF); \
-        (buf)[7] = (uint8_t)(((value) >> 56) & 0xFF); \
-    } while (0)
-
 
 
 
@@ -208,36 +195,34 @@ accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
 
 
-// HookOn: Incoming Payment
+// HookOn: Incoming Payment   HELP HERE -------------------------------------------------------------------------------------------
 if (tt == 00){ 
 
 
-// STATE URIL
-uint64_t suril = 0x000000000000000E; 
-TRACEHEX(suril)
-
-
 // STATE NUMBER KEY
+uint64_t snum = 0x0000000000000001;
+uint8_t snum_buf[8] = {0};
+UINT64_TO_BUF(snum_buf, snum);
+TRACEHEX(snum_buf);
 
-                //14 our test amount
-uint64_t nkey = 0x000000000000000E;
-uint8_t kbuf[8] = {0};
-UINT64_TO_BUF_LE(nkey, kbuf);
-TRACEHEX(kbuf)
+// STATE URIL
+uint64_t suril = 0x000000000000000E;
+uint8_t suril_buf[8] = {0};
+UINT64_TO_BUF(suril_buf, suril);
+TRACEHEX(suril_buf);
 
 
 // STATE URI BUFFER
 uint8_t suri[256];
-suri[0] = 0x000000000000000E;
+suri[0] = 14;
 
-// CHECK STATE
-if (state(suri + 1,suril, SBUF(kbuf)) != 16)
+
+TRACEVAR(suri)
+TRACEHEX(snum_buf)
+
+#define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state(SBUF(suri), SBUF(snum_buf)) != 16)
 		rollback(SBUF("Error: could not read state!"), 1);
-
-// PRINT URI
-TRACEHEX(kbuf);
- accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
-
 
 
 
