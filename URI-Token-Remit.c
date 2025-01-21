@@ -125,7 +125,7 @@ TRACEVAR(tt)
     uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
     uint8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
     uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-
+    TRACEVAR(uri_len)
     
 
 
@@ -200,7 +200,7 @@ if (tt == 00){
 
 
 // STATE NUMBER KEY
-uint64_t snum = 0x0000000000000001;
+uint64_t snum = 0x0000000000000003;
 uint8_t snum_buf[8] = {0};
 UINT64_TO_BUF(snum_buf, snum);
 TRACEHEX(snum_buf);
@@ -213,13 +213,18 @@ TRACEHEX(suril_buf);
 
 
 // STATE URI BUFFER
-uint8_t suri[14];
+ uint64_t suri[256];
+ suri[0] = 14;
+
+   
+if (state(SBUF(suri), SBUF(snum_buf)) < 0)
+		rollback(SBUF("Error: could not check state!"), 1);
+
+TRACEHEX(suri);
 
 
+accept(SBUF("txn_remit_mint.c: WE READ THE STATE."), __LINE__);
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state(SBUF(suri), SBUF(snum_buf)) >= 0)
-		rollback(SBUF("Error: could not read state!"), 1);
 
 TRACEVAR(suri)
 
