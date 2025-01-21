@@ -203,13 +203,13 @@ if (tt == 00){
 uint64_t snum = 0x0000000000000003;
 uint8_t snum_buf[8] = {0};
 UINT64_TO_BUF(snum_buf, snum);
-TRACEHEX(snum_buf);
+//TRACEHEX(snum_buf);
 
 // STATE URIL
 uint64_t suril = 0x000000000000000E;
 uint8_t suril_buf[8] = {0};
 UINT64_TO_BUF(suril_buf, suril);
-TRACEHEX(suril_buf);
+//TRACEHEX(suril_buf);
 
 
 // STATE URI BUFFER
@@ -220,19 +220,18 @@ TRACEHEX(suril_buf);
 if (state(SBUF(suri), SBUF(snum_buf)) < 0)
 		rollback(SBUF("Error: could not check state!"), 1);
 
+
+uint64_t suri_len = UINT64_FROM_BUF(suri);
 TRACEHEX(suri);
 
 
-accept(SBUF("txn_remit_mint.c: WE READ THE STATE."), __LINE__);
 
-
-TRACEVAR(suri)
 
     PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, suril);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + uri_len + 1);
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + suril + 1);
     if (emit_result > 0)
     {
         accept(SBUF("txn_remit_mint.c: Tx emitted success."), __LINE__);
