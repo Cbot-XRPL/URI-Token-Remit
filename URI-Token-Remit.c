@@ -19,6 +19,21 @@
     buf[len + 1] += 0xE1U; \
 }
 
+//unit64 to buffer arry
+#define UINT64_TO_BUF_LE(value, buf)          \
+    do {                                      \
+        (buf)[0] = (uint8_t)((value) & 0xFF); \
+        (buf)[1] = (uint8_t)(((value) >> 8) & 0xFF); \
+        (buf)[2] = (uint8_t)(((value) >> 16) & 0xFF); \
+        (buf)[3] = (uint8_t)(((value) >> 24) & 0xFF); \
+        (buf)[4] = (uint8_t)(((value) >> 32) & 0xFF); \
+        (buf)[5] = (uint8_t)(((value) >> 40) & 0xFF); \
+        (buf)[6] = (uint8_t)(((value) >> 48) & 0xFF); \
+        (buf)[7] = (uint8_t)(((value) >> 56) & 0xFF); \
+    } while (0)
+
+
+
 
 
 // clang-format off tx sizing
@@ -112,6 +127,7 @@ TRACEVAR(tt)
   uint64_t num_len = UINT64_FROM_BUF(num_buf);
 
 
+
   uint8_t del_buf[8];
   uint8_t del_key[3] = { 'D', 'E', 'L'};
   int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
@@ -122,6 +138,7 @@ TRACEVAR(tt)
     uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
     uint8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
     uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
+    TRACEVAR(uri_len);
     
 
 
@@ -133,7 +150,7 @@ TRACEVAR(tt)
 
 
    // HookOn: Invoke Set URIL State
-    if (tt == 99 && isUril > 0 && isUri <= 0){ 
+    if (tt == 72){ 
 
 TRACEHEX( num_buf);
 TRACEHEX(uril_buf);
@@ -191,35 +208,40 @@ accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
 
 
-   // HookOn: Incoming Payment
-
+// HookOn: Incoming Payment
 if (tt == 00){ 
 
 
-//set uri key and buffer lenght
-uint64_t key = 0x0000000000000001; 
+// STATE URIL
+uint64_t suril = 0x000000000000000E; 
+TRACEHEX(suril)
 
 
-uint8_t kbuf[256];
-kbuf[0] = 0x000000000000000E;
+// STATE NUMBER KEY
+
+                //14 our test amount
+uint64_t nkey = 0x000000000000000E;
+uint8_t kbuf[8] = {0};
+UINT64_TO_BUF_LE(nkey, kbuf);
+TRACEHEX(kbuf)
 
 
-uint64_t kbuff = 0x000000000000000E; 
+// STATE URI BUFFER
+uint8_t suri[256];
+suri[0] = 0x000000000000000E;
 
-
-
- //lenght of date we are trying to read
-if (state(SBUF(kbuf), SBUF(key)) >= 0)
+// CHECK STATE
+if (state(suri + 1,suril, SBUF(kbuf)) != 16)
 		rollback(SBUF("Error: could not read state!"), 1);
 
-
+// PRINT URI
 TRACEHEX(kbuf);
-TRACEHEX(key);
  accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
 
 
 
-    PREPARE_REMIT_TXN(hook_acct, otx_acc, kbuf, kbuff);
+
+    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, suril);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
