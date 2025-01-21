@@ -1,5 +1,5 @@
-
 #include "hookapi.h"
+#include <stdint.h>
 
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
@@ -192,23 +192,34 @@ accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
 
    // HookOn: Incoming Payment
-    if (tt == 00){ 
+
+if (tt == 00){ 
 
 
- #define SBUF(str) (uint32_t)(str), sizeof(str)
- 
-if (state(SBUF(uri_buffer), SBUF(num_buf)) >= 0)
+//set uri key and buffer lenght
+uint64_t key = 0x0000000000000001; 
+
+
+uint8_t kbuf[256];
+kbuf[0] = 0x000000000000000E;
+
+
+uint64_t kbuff = 0x000000000000000E; 
+
+
+
+ //lenght of date we are trying to read
+if (state(SBUF(kbuf), SBUF(key)) >= 0)
 		rollback(SBUF("Error: could not read state!"), 1);
 
 
-TRACEHEX(num_buf);
-TRACEHEX(uri_buffer);
-
+TRACEHEX(kbuf);
+TRACEHEX(key);
  accept(SBUF("txn_remit_mint.c: READ THE STATE."), __LINE__);
 
 
 
-    PREPARE_REMIT_TXN(hook_acct, otx_acc, uri_buffer, uri_len);
+    PREPARE_REMIT_TXN(hook_acct, otx_acc, kbuf, kbuff);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
