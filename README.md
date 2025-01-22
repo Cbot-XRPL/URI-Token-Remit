@@ -25,13 +25,13 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 ## Hook State Number Keys
 These are the number keys to param data stored in hook state. You will learn how to interact with them in the hook parmeters section.
 
-|STATE|NUMBER|
-|-----------|-------|
-|URI|999999|
-|URIL|999998|
-|COST|999997|
-|LOCK|999996|
-|NUM|000001-999990|
+|STATE|NUMBER|HEX|
+|-----------|-------|------|
+|URI|999999|00000000000F423F|
+|URIL|999998|00000000000F423E|
+|COST|999997| 00000000000F423D|
+|LOCK|999996| 00000000000F423C|
+|NUM|000001-999990| 00000000000F4236 - 0000000000000001|
 
 
 
@@ -49,8 +49,9 @@ To add and remove state for this hook you will use ```TTINVOKE ``` transactions 
 
 |PARAM|NUMBER|
 |-----------|-------|
-|**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.|
+
 |**URIL:**|The lenght in bytes of your base URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URIL to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999998.|
+|**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.|
 |**NUM:**|The number/name of your spefic URI metadata. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your name/number to unit64 before use in hook params. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
 |**COST:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
 You can add the cost you want charge users to mint a uri token.
