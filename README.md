@@ -6,7 +6,8 @@ This C hook is desgined to automasly distribute RWA or NFTs based on the Xahau h
 
 ## What Does This Hook do
 
-The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
+The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality.
+
 
 ## Tools
 
@@ -49,10 +50,12 @@ To add and remove state for this hook you will use ```TTINVOKE ``` transactions 
 |PARAM|NUMBER|
 |-----------|-------|
 |**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.|
-|**URIL:**|The lenght in bytes of your base URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999998.|
-|**NUM:**|The number/name of your spefic URI metadata. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your number to a unit64 before use in hook params. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
-|**COST:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
-|**LOCK:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
+|**URIL:**|The lenght in bytes of your base URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URIL to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999998.|
+|**NUM:**|The number/name of your spefic URI metadata. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your name/number to unit64 before use in hook params. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
+|**COST:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
+You can add the cost you want charge users to mint a uri token.
+|**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed. Stored at namespace number 999997.|
+|**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with you transaction to unlock it.  Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 
