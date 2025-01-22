@@ -125,7 +125,10 @@ uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 TRACEVAR(isUril);
-    
+
+// check for lenght prior to uri being built block uri if not present
+
+
 uint8_t uri_buffer[256];
 uri_buffer[0] = uri_len;
 int8_t uri_key[3] = { 'U', 'R', 'I' };
