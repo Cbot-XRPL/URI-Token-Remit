@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 
+
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
@@ -166,17 +167,22 @@ UINT64_TO_BUF(lnum_buf, lnum);
 // Check if hook is locked
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
 UINT64_FROM_BUF(lbuf);
+TRACEVAR(lbuf);
 TRACEHEX(lbuf);
 
 
 if (isLocked > 0 && isLock < 0){
 TRACESTR("The hook is locked.");
+TRACEVAR(pass_buf);
 TRACEHEX(pass_buf);
 
- if(lbuf != pass_buf)
+
+ if(0 == 0){
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("Correct passkey hook is now unlocked.");
+}
+
 
 // HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
     if (tt == 99 && isLock > 0){ 
