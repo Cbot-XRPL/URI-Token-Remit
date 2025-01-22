@@ -131,14 +131,31 @@ uri_buffer[0] = uri_len;
 int8_t uri_key[3] = { 'U', 'R', 'I' };
 int8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
 
+// Configure state storage numbers
 
-// GATEWAY -----------------------------------------------------------------------------------------  
-
-
-// Lock state number key
+// Lock state number
 uint64_t lnum = 0x00000000000F423C;
 uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
+
+// COST state number
+uint64_t cnum = 0x00000000000F423E;
+uint8_t cnum_buf[8] = {0};
+UINT64_TO_BUF(cnum_buf, cnum);
+
+// URI state number
+uint64_t unum = 0x00000000000F423E;
+uint8_t unum_buf[8] = {0};
+UINT64_TO_BUF(unum_buf, unum);
+
+// URIL state number
+uint64_t ulnum = 0x00000000000F423E;
+uint8_t ulnum_buf[8] = {0};
+UINT64_TO_BUF(ulnum_buf, ulnum);
+
+
+// HOOK LOCK -----------------------------------------------------------------------------------------  
+
 
 // Lock state buffer
  uint8_t lbuf[8]={0};
@@ -156,9 +173,9 @@ TRACEVAR(reconstructed_pass_value);
 
 //Compare lock and passkey
  if(reconstructed_lbuf_value != reconstructed_pass_value){
-rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
+rollback(SBUF("Error: Incorrect passkey!"), __LINE__);
 }
-TRACESTR("Correct passkey hook is now unlocked.");
+TRACESTR("passkey hook is now unlocked.");
 }
 
 // HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
@@ -175,7 +192,7 @@ TRACEHEX(lock_buf);
 if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
 		rollback(SBUF("Error: Could not set LOCK state!"), 1);
 
-accept(SBUF("We set the LOCK."), __LINE__);
+accept(SBUF("Success: Set the LOCK state."), __LINE__);
 
 }
 
@@ -185,11 +202,6 @@ accept(SBUF("We set the LOCK."), __LINE__);
 
 if (tt == 99 && isCost > 0){ 
 
-// URIL state number key
-uint64_t cnum = 0x00000000000F423E;
-uint8_t cnum_buf[8] = {0};
-UINT64_TO_BUF(cnum_buf, cnum);
-
 TRACEHEX(cnum);
 TRACEHEX(cost_buf);
 
@@ -197,7 +209,7 @@ TRACEHEX(cost_buf);
 if (state_set(SBUF(cost_buf), SBUF(cnum)) < 0)
 		rollback(SBUF("Error: Could not set COST state!"), 1);
 
-accept(SBUF("Set the COST."), __LINE__);
+accept(SBUF("Success: Set the COST state."), __LINE__);
 
 }
 
@@ -207,19 +219,14 @@ accept(SBUF("Set the COST."), __LINE__);
 
 if (tt == 99 && isUril > 0){ 
 
-// URIL state number key
-uint64_t unum = 0x00000000000F423E;
-uint8_t unum_buf[8] = {0};
-UINT64_TO_BUF(unum_buf, unum);
-
 TRACEHEX(unum_buf);
 TRACEHEX(uril_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uril_buf), SBUF(unum)) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
+if (state_set(SBUF(uril_buf), SBUF(ulnum)) < 0)
+		rollback(SBUF("Error: could not set the URIL state!"), 1);
 
-accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
+accept(SBUF("Success: Set the URIL state."), __LINE__);
 
 }
 
@@ -228,14 +235,15 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
 
 if (tt == 99 && isUri > 0)
-TRACEHEX(num_buf);
+	
+TRACEHEX(unum_buf);
 TRACEHEX(uri_buffer);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
-
-accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
+		rollback(SBUF("Error: could not set the URI state!"), 1);
+ 
+accept(SBUF("Success: Set a URI state."), __LINE__);
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
@@ -247,15 +255,16 @@ TRACEHEX(del_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
+		rollback(SBUF("Error: could not delete state!"),__LINE__);
 
-accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
+accept(SBUF("Success: Deleted the state."), __LINE__);
 
 }
 
 
 
 // HookOn: Incoming Payment  -----------------------------------------------------------------------------------------
+
 
 
 if (tt == 00){ 
@@ -266,30 +275,29 @@ uint8_t snum_buf[8] = {0};
 UINT64_TO_BUF(snum_buf, snum);
 //TRACEHEX(snum_buf);
 
-// STATE URIL
-uint64_t suril = 0x000000000000000E;
-uint8_t suril_buf[8] = {0};
-UINT64_TO_BUF(suril_buf, suril);
+// URIL state number key
+uint64_t unum = 0x00000000000F423E;
+uint8_t unum_buf[8] = {0};
+UINT64_TO_BUF(unum_buf, unum);
 
 // STATE URI BUFFER
  uint64_t suri[256];
  suri[0] = 14;
    
 if (state(SBUF(suri), SBUF(snum_buf)) < 0)
-		rollback(SBUF("Error: could not check state!"), 1);
+		rollback(SBUF("Could not check state!"), 1);
 
 TRACEHEX(suri);
-
-    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, suril);
+    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, unum);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + suril + 1);
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + unum + 1);
     if (emit_result > 0)
     {
-        accept(SBUF("txn_remit_mint.c: Tx emitted success."), __LINE__);
+        accept(SBUF("Success:Tx emitted success."), __LINE__);
     }
-    accept(SBUF("txn_remit_mint.c: Tx emitted failure."), __LINE__);
+    accept(SBUF("Error: Tx emitted failure."), __LINE__);
 
 }
 
