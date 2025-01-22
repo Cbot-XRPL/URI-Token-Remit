@@ -1,8 +1,6 @@
 #include "hookapi.h"
 #include <stdint.h>
 
-
-
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
@@ -20,9 +18,6 @@
         *(((uint64_t*)buf) + i) = *(((uint64_t*)uri) + i); \
     buf[len + 1] += 0xE1U; \
 }
-
-
-
 
 // clang-format off tx sizing
 uint8_t txn[60000] =
@@ -86,8 +81,8 @@ uint8_t txn[60000] =
 // clang-format on
 
 
-
 // START OF THE HOOK ACTIVATION -----------------------------------------------------------------------------------------
+
 
 int64_t hook(uint32_t reserved) {
 
@@ -101,42 +96,29 @@ hook_account(hook_acct, 20);
 uint8_t otx_acc[20];
 otxn_field(otx_acc, 20, sfAccount);
 
-
 // To know the type of origin txn
 int64_t tt = otxn_type();
-
-
 
 // Configure Params
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
-TRACEVAR(isCost);
 
 uint8_t num_buf[8];
 uint8_t num_key[3] = { 'N', 'U', 'M'};
 int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-TRACEVAR(isNum);
-
 
 uint8_t lock_buf[8];
 uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
 int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
-TRACEVAR(isLock);
-
 
 uint8_t pass_buf[8];
 uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
 int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
-TRACEVAR(isPass);
-
 
 uint8_t del_buf[8];
 uint8_t del_key[3] = { 'D', 'E', 'L'};
 int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
-uint64_t del_len = UINT64_FROM_BUF(del_buf);
-TRACEVAR(isDel);
- 
 
 uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
@@ -144,7 +126,6 @@ int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 TRACEVAR(isUril);
     
-
 uint8_t uri_buffer[256];
 uri_buffer[0] = uri_len;
 int8_t uri_key[3] = { 'U', 'R', 'I' };
@@ -152,6 +133,7 @@ int8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
 
 
 // GATEWAY -----------------------------------------------------------------------------------------  
+
 
 // Lock state number key
 uint64_t lnum = 0x00000000000F423C;
@@ -183,6 +165,8 @@ TRACESTR("Correct passkey hook is now unlocked.");
 
 
 // HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
+
+
 if (tt == 99 && isLock > 0){ 
 
 TRACESTR("Ran invoke to set lock");
@@ -196,13 +180,13 @@ if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
 
 accept(SBUF("We set the lock."), __LINE__);
 
-    }
-
+}
 
 
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
-if (tt == 99 && isUril > 0){ 
 
+
+if (tt == 99 && isUril > 0){ 
 
 // URIL state number key
 uint64_t unum = 0x00000000000F423E;
@@ -220,9 +204,9 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
 }
 
-  
     
 // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
+
 
 if (tt == 99 && isUri > 0)
 TRACEHEX(num_buf);
@@ -235,20 +219,12 @@ if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
 accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
 
 
-
-    
-
+// HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
 
 
-
-
-
-
-    // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
-    if (tt == 99 && isDel > 0){
+if (tt == 99 && isDel > 0){
 
 TRACEHEX(del_buf);
-
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
@@ -256,18 +232,14 @@ if (state_set(0,0, SBUF(del_buf)) < 0)
 
 accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
-
-
-    }
-
-
-
+}
 
 
 
 // HookOn: Incoming Payment  -----------------------------------------------------------------------------------------
-if (tt == 00){ 
 
+
+if (tt == 00){ 
 
 // STATE NUMBER KEY
 uint64_t snum = 0x0000000000000003;
@@ -279,22 +251,15 @@ UINT64_TO_BUF(snum_buf, snum);
 uint64_t suril = 0x000000000000000E;
 uint8_t suril_buf[8] = {0};
 UINT64_TO_BUF(suril_buf, suril);
-//TRACEHEX(suril_buf);
-
 
 // STATE URI BUFFER
  uint64_t suri[256];
  suri[0] = 14;
-
    
 if (state(SBUF(suri), SBUF(snum_buf)) < 0)
 		rollback(SBUF("Error: could not check state!"), 1);
 
-
 TRACEHEX(suri);
-
-
-
 
     PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, suril);
 
@@ -308,7 +273,6 @@ TRACEHEX(suri);
     accept(SBUF("txn_remit_mint.c: Tx emitted failure."), __LINE__);
 
 }
-
 
 //final gaurds
 
