@@ -143,15 +143,14 @@ UINT64_TO_BUF(lnum_buf, lnum);
 // Lock state buffer
  uint8_t lbuf[8]={0};
  
-// Check if hook is locked
+// Check if hook has LOCK state
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
-TRACEHEX(lbuf)
-uint64_t reconstructed_lbuf_value = UINT64_FROM_BUF(lbuf);
-TRACEVAR(reconstructed_lbuf_value);
 
+// Check if the hook is locked
 if (isLocked > 0 && isLock < 0){
 TRACESTR("The hook is locked.");
-TRACEHEX(pass_buf);
+uint64_t reconstructed_lbuf_value = UINT64_FROM_BUF(lbuf);
+TRACEVAR(reconstructed_lbuf_value);
 uint64_t reconstructed_pass_value = UINT64_FROM_BUF(pass_buf);
 TRACEVAR(reconstructed_pass_value);
 
@@ -160,9 +159,7 @@ TRACEVAR(reconstructed_pass_value);
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("Correct passkey hook is now unlocked.");
-
 }
-
 
 // HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
 
@@ -176,31 +173,31 @@ TRACEHEX(lock_buf);
             //the data       //number key
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
-		rollback(SBUF("Error: could not set lock state!"), 1);
+		rollback(SBUF("Error: Could not set LOCK state!"), 1);
 
-accept(SBUF("We set the lock."), __LINE__);
+accept(SBUF("We set the LOCK."), __LINE__);
 
 }
 
 
-// HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
+// HookOn: Invoke Set COST State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isUril > 0){ 
+if (tt == 99 && isCost > 0){ 
 
 // URIL state number key
-uint64_t unum = 0x00000000000F423E;
-uint8_t unum_buf[8] = {0};
-UINT64_TO_BUF(unum_buf, unum);
+uint64_t cnum = 0x00000000000F423E;
+uint8_t cnum_buf[8] = {0};
+UINT64_TO_BUF(cnum_buf, cnum);
 
-TRACEHEX(unum_buf);
-TRACEHEX(uril_buf);
+TRACEHEX(cnum);
+TRACEHEX(cost_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uril_buf), SBUF(unum)) < 0)
-		rollback(SBUF("Error: could not set state!"), 1);
+if (state_set(SBUF(cost_buf), SBUF(cnum)) < 0)
+		rollback(SBUF("Error: Could not set COST state!"), 1);
 
-accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
+accept(SBUF("Set the COST."), __LINE__);
 
 }
 
