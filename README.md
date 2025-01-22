@@ -8,6 +8,28 @@ This C hook is desgined to automasly distribute RWA or NFTs based on the Xahau h
 
 The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account.
 
+## Tools
+
+ [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
+
+ [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
+
+ [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
+
+ [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
+
+
+## Hook State Number Keys
+|NUMBER|STATE|
+|-----------|-------|
+|999999|URI|
+|999998|URIL|
+|000001-999990|NUM|
+|999997|COST|
+|999999|LOCK|
+
+
+
 ## Installing the hook
 
 
