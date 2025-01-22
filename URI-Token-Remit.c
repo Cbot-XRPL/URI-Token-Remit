@@ -126,8 +126,8 @@ uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
 
   uint8_t pass_buf[8];
   uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
-  int8_t isPass = otxn_param(SBUF(lock_buf), SBUF(lock_key));
-  uint64_t pass_len = UINT64_FROM_BUF(lock_buf);
+  int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
+  uint64_t pass_len = UINT64_FROM_BUF(pass_buf);
 
 
   uint8_t del_buf[8];
@@ -152,11 +152,11 @@ uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
 
 
 
-  // GATEWAY -----------------------------------------------------------------------------------------  
+// GATEWAY -----------------------------------------------------------------------------------------  
     
 
 // Lock state number key
-uint64_t lnum = 0x0000000000000003;
+uint64_t lnum = 0x00000000000F423C;
 uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
@@ -164,22 +164,13 @@ UINT64_TO_BUF(lnum_buf, lnum);
  uint64_t lbuf[8];
  
 // Check if hook is locked
-int8_t Locked = (state(SBUF(lbuf), SBUF(lnum_buf)));
+int8_t isLocked = (state(SBUF(lbuf), SBUF(lnum_buf)));
 
-
-
-//rollback(SBUF("uri_token_remit.c: could not check lock state!"), 1);
-
-
-uint64_t suri_len = UINT64_FROM_BUF(lbuf);
-TRACEHEX(lbuf);
-
-
-
-
-
-
-
+if (isLocked < 0){
+ TRACESTR("uri_token_remit.c: The Hook is Locked.");
+ if(lbuf != pass_buf)
+rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
+}
 
 
 
@@ -202,7 +193,7 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
   
     
-   // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
+// HookOn: Invoke Set State -----------------------------------------------------------------------------------------
     if (tt == 99 && isNum > 0 && isDel <= 0){ 
 
 TRACEHEX(num_buf);
