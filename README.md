@@ -10,11 +10,13 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 ## Tools
 
- [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
-
- [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
-
  [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
+
+ [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/)
+
+ [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) 
+
+ [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
  [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
@@ -202,24 +204,6 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
     };
 ```
 
-## Tools
-
- [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
-
- [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/account/)
-
- [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
-
- [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
-
-
-## Hook State Number Keys
-|NUMBER|STATE|
-|-----------|-------|
-|999999|URI|
-|999998|URIL|
-|999997|COST|
-|999999|LOCK|
 
 ## Last Thoughts
 
