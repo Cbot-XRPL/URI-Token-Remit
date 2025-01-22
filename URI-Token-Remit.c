@@ -102,7 +102,7 @@ otxn_field(otx_acc, 20, sfAccount);
 
 // To know the type of origin txn
 int64_t tt = otxn_type();
-TRACEVAR(tt)
+
 
 
 // Configure Params
@@ -140,7 +140,7 @@ uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
     uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
     uint8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
     uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-    TRACEVAR(uri_len)
+    
     
 
 
@@ -161,24 +161,43 @@ uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
 // Lock state buffer
- uint64_t lbuf[8];
+ uint8_t lbuf[8];
  
 // Check if hook is locked
-int8_t isLocked = (state(SBUF(lbuf), SBUF(lnum_buf)));
+int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
+UINT64_FROM_BUF(lbuf);
+TRACEHEX(lbuf);
 
-if (isLocked < 0){
- TRACESTR("uri_token_remit.c: The Hook is Locked.");
+
+if (isLocked > 0 && isLock < 0){
+TRACESTR("The hook is locked.");
+TRACEHEX(pass_buf);
+
  if(lbuf != pass_buf)
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
+TRACESTR("Correct passkey hook is now unlocked.");
 
+// HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
+    if (tt == 99 && isLock > 0){ 
 
+TRACESTR("Ran invoke to set lock");
+TRACEHEX(lnum);
+TRACEHEX(lock_buf);
 
+            //the data       //number key
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
+		rollback(SBUF("Error: could not set lock state!"), 1);
+
+accept(SBUF("We set the lock."), __LINE__);
+
+    }
 
 
 
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
-    if (tt == 72){ 
+if (tt == 99 && isUril > 0){ 
 
 TRACEHEX( num_buf);
 TRACEHEX(uril_buf);
@@ -194,7 +213,7 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
   
     
 // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
-    if (tt == 99 && isNum > 0 && isDel <= 0){ 
+    
 
 TRACEHEX(num_buf);
 TRACEHEX(uri_buffer);
@@ -207,7 +226,7 @@ accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
 
 
 
-    }
+    
 
 
 
