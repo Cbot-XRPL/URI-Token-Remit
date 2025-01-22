@@ -45,6 +45,14 @@ This hook is requires your metadata files for the URIs to be available at one ba
 
 ## Hook Parmeters
 
+|PARAM|NUMBER|
+|-----------|-------|
+|**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.|
+|**URIL:**|999998|
+|**NUM:**|999997|
+|**COST:**|999996|
+|**LOCK:**|000001-999990|
+
 **URI:** The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.
 
 **URIL:** The lenght in bytes of your base URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999998.
