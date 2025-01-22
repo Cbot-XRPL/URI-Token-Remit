@@ -108,56 +108,50 @@ int64_t tt = otxn_type();
 
 
 // Configure Params
-
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
- TRACEVAR(isCost);
+TRACEVAR(isCost);
 
-  uint8_t num_buf[8];
-  uint8_t num_key[3] = { 'N', 'U', 'M'};
-  int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-  TRACEVAR(isNum);
+uint8_t num_buf[8];
+uint8_t num_key[3] = { 'N', 'U', 'M'};
+int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
+TRACEVAR(isNum);
 
 
-  uint8_t lock_buf[8];
-  uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
-  int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
+uint8_t lock_buf[8];
+uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
+int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
 TRACEVAR(isLock);
 
 
-  uint8_t pass_buf[8];
-  uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
-  int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
- TRACEVAR(isPass);
+uint8_t pass_buf[8];
+uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
+int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
+TRACEVAR(isPass);
 
 
-  uint8_t del_buf[8];
-  uint8_t del_key[3] = { 'D', 'E', 'L'};
-  int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
-  uint64_t del_len = UINT64_FROM_BUF(del_buf);
-  TRACEVAR(isDel);
+uint8_t del_buf[8];
+uint8_t del_key[3] = { 'D', 'E', 'L'};
+int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
+uint64_t del_len = UINT64_FROM_BUF(del_buf);
+TRACEVAR(isDel);
  
 
-    uint8_t uril_buf[8];
-    uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
+uint8_t uril_buf[8];
+uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 TRACEVAR(isUril);
     
-    
-
 
 uint8_t uri_buffer[256];
 uri_buffer[0] = uri_len;
-uint8_t uri_key[3] = { 'U', 'R', 'I' };
+int8_t uri_key[3] = { 'U', 'R', 'I' };
 int8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
 
 
-
-
 // GATEWAY -----------------------------------------------------------------------------------------  
-    
 
 // Lock state number key
 uint64_t lnum = 0x00000000000F423C;
@@ -169,6 +163,8 @@ UINT64_TO_BUF(lnum_buf, lnum);
  
 // Check if hook is locked
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
+TRACEVAR(lbuf)
+UINT64_FROM_BUF(lbuf);
 TRACEVAR(lbuf)
 TRACEHEX(lbuf)
 
@@ -223,8 +219,8 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
   
     
 // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
-    
-
+   
+if (tt == 99 && isUri > 0)
 TRACEHEX(num_buf);
 TRACEHEX(uri_buffer);
 
