@@ -20,7 +20,7 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 
 ## Hook State Number Keys
-These are the number keys to param data stored in hook state. You will learn how to interact with them in the param section.
+These are the number keys to param data stored in hook state. You will learn how to interact with them in the hook parmeters section.
 
 |STATE|NUMBER|
 |-----------|-------|
