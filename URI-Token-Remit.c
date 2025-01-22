@@ -145,18 +145,18 @@ UINT64_TO_BUF(lnum_buf, lnum);
  
 // Check if hook is locked
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
-TRACEVAR(lbuf)
-UINT64_FROM_BUF(lbuf);
-TRACEVAR(lbuf)
 TRACEHEX(lbuf)
+uint64_t reconstructed_lbuf_value = UINT64_FROM_BUF(lbuf);
+TRACEVAR(reconstructed_lbuf_value);
 
 if (isLocked > 0 && isLock < 0){
 TRACESTR("The hook is locked.");
-TRACEVAR(pass_buf)
 TRACEHEX(pass_buf);
+uint64_t reconstructed_pass_value = UINT64_FROM_BUF(pass_buf);
+TRACEVAR(reconstructed_pass_value);
 
 //Compare lock and passkey
- if(lbuf == pass_buf){
+ if(reconstructed_lbuf_value != reconstructed_pass_value){
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("Correct passkey hook is now unlocked.");
@@ -179,6 +179,28 @@ if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
 		rollback(SBUF("Error: could not set lock state!"), 1);
 
 accept(SBUF("We set the lock."), __LINE__);
+
+}
+
+
+// HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
+
+
+if (tt == 99 && isUril > 0){ 
+
+// URIL state number key
+uint64_t unum = 0x00000000000F423E;
+uint8_t unum_buf[8] = {0};
+UINT64_TO_BUF(unum_buf, unum);
+
+TRACEHEX(unum_buf);
+TRACEHEX(uril_buf);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(uril_buf), SBUF(unum)) < 0)
+		rollback(SBUF("Error: could not set state!"), 1);
+
+accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
 }
 
