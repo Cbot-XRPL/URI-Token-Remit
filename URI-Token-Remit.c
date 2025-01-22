@@ -23,6 +23,7 @@
 
 
 
+
 // clang-format off tx sizing
 uint8_t txn[60000] =
 {
@@ -111,44 +112,46 @@ int64_t tt = otxn_type();
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
-uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
+ TRACEVAR(isCost);
 
   uint8_t num_buf[8];
   uint8_t num_key[3] = { 'N', 'U', 'M'};
   int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-  uint64_t num_len = UINT64_FROM_BUF(num_buf);
+  TRACEVAR(isNum);
 
 
   uint8_t lock_buf[8];
   uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
   int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
-  uint64_t lock_len = UINT64_FROM_BUF(lock_buf);
+TRACEVAR(isLock);
 
 
   uint8_t pass_buf[8];
   uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
   int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
- 
+ TRACEVAR(isPass);
 
 
   uint8_t del_buf[8];
   uint8_t del_key[3] = { 'D', 'E', 'L'};
   int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
   uint64_t del_len = UINT64_FROM_BUF(del_buf);
+  TRACEVAR(isDel);
  
 
     uint8_t uril_buf[8];
     uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
-    uint8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
-    uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
+int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
+uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
+TRACEVAR(isUril);
     
     
 
 
-    uint8_t uri_buffer[256];
-    uri_buffer[0] = uri_len;
-    uint8_t uri_key[3] = { 'U', 'R', 'I' };
-    uint8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+uint8_t uri_buffer[256];
+uri_buffer[0] = uri_len;
+uint8_t uri_key[3] = { 'U', 'R', 'I' };
+int8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
 
 
 
@@ -169,23 +172,24 @@ int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
 TRACEVAR(lbuf)
 TRACEHEX(lbuf)
 
-
-
 if (isLocked > 0 && isLock < 0){
 TRACESTR("The hook is locked.");
 TRACEVAR(pass_buf)
 TRACEHEX(pass_buf);
 
-
+//Compare lock and passkey
  if(lbuf == pass_buf){
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("Correct passkey hook is now unlocked.");
+accept(SBUF("We set the lock."), __LINE__);
+
+
 }
 
 
 // HookOn: Invoke Set LOCK State -----------------------------------------------------------------------------------------
-    if (tt == 99 && isLock > 0){ 
+if (tt == 99 && isLock > 0){ 
 
 TRACESTR("Ran invoke to set lock");
 TRACEHEX(lnum);
@@ -205,7 +209,7 @@ accept(SBUF("We set the lock."), __LINE__);
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
 if (tt == 99 && isUril > 0){ 
 
-TRACEHEX( num_buf);
+TRACEHEX(num_buf);
 TRACEHEX(uril_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
@@ -214,7 +218,7 @@ if (state_set(SBUF(uril_buf), SBUF(num_buf)) < 0)
 
 accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
-    }
+}
 
   
     
