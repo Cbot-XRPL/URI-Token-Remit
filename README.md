@@ -48,7 +48,7 @@ This hook is requires your metadata files for the URIs to be available at one ba
 To add and remove state for this hook you will use ```TTINVOKE ``` transactions on the account with the parameter you intend to set:
 
 |PARAM|NUMBER|
-|-----------|-------|
+|-------------|----------------|
 
 |**URIL:**|The lenght in bytes of your base URI after it hex / 2. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URIL to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999998.|
 |**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. Stored at namespace number 999999.|
@@ -59,7 +59,6 @@ To add and remove state for this hook you will use ```TTINVOKE ``` transactions 
 |**DEL**| List the number of the hook state you want to delete.|
 
 
-To add and remove state for this hook you will use ```TTINVOKE ``` transactions on the account with the parameter you intend to set:
 
 **Example:** of params before hexing
 
