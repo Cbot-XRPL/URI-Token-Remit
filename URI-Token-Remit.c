@@ -263,8 +263,53 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 
 
 
-// HookOn: Incoming Payment  -----------------------------------------------------------------------------------------
+// HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
 
+
+if (tt == 00){ 
+
+
+// COST state buffer
+ uint8_t cbuf[8]={0};
+ 
+// Check if hook hook COST state value
+int8_t hasCost = state(SBUF(cbuf), SBUF(cnum_buf));
+
+// Check if the hook has cost
+if (hasCost > 0){
+TRACESTR("The hook has a URI token cost.");
+TRACEHEX(cbuf)
+
+// fetch the sent Amount
+unsigned char amount_buffer[48];
+int64_t amount_len = otxn_field(SBUF(amount_buffer), sfAmount);
+TRACEHEX(amount_buffer);
+
+
+//Ensure the payment is XAH
+if (amount_len != 8)
+{
+rollback(SBUF("Error: This hook only accepts XAH!"), __LINE__);
+}
+
+//recontruct amount sent and cost to compare them
+uint64_t reconstructed_cbuf_value = UINT64_FROM_BUF(cbuf);
+TRACEVAR(reconstructed_cbuf_value);
+uint64_t reconstructed_amount_value = UINT64_FROM_BUF(amount_buffer);
+TRACEVAR(reconstructed_amount_value);
+
+//Compare payment amount and cost
+if( reconstructed_amount_value == reconstructed_cbuf_value){
+rollback(SBUF("Error: Incorrect payment amount!"), __LINE__);
+}
+TRACESTR("Payment amounts match.");
+}
+
+TRACESTR("Payment portion of this hook is now unlocked.");
+}
+
+
+// HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
 
 
 if (tt == 00){ 
