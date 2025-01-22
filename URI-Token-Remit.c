@@ -128,7 +128,7 @@ uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
   uint8_t pass_buf[8];
   uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
   int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
-  uint64_t pass_len = UINT64_FROM_BUF(pass_buf);
+ 
 
 
   uint8_t del_buf[8];
@@ -166,18 +166,18 @@ UINT64_TO_BUF(lnum_buf, lnum);
  
 // Check if hook is locked
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
-UINT64_FROM_BUF(lbuf);
-TRACEVAR(lbuf);
-TRACEHEX(lbuf);
+TRACEVAR(lbuf)
+TRACEHEX(lbuf)
+
 
 
 if (isLocked > 0 && isLock < 0){
 TRACESTR("The hook is locked.");
-TRACEVAR(pass_buf);
+TRACEVAR(pass_buf)
 TRACEHEX(pass_buf);
 
 
- if(0 == 0){
+ if(lbuf == pass_buf){
 rollback(SBUF("uri_token_remit.c: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("Correct passkey hook is now unlocked.");
