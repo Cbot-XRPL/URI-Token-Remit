@@ -23,7 +23,7 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 
 
 ## Hook State Number Keys
-These are the number keys to param data stored in hook state. You will learn how to interact with them in the hook parmeters section.
+These are the number keys to param data stored in hook state. They are a 6 digit number that you will HEX and unit64 with the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/). You will learn how to interact with them in the hook parmeters section.
 
 |STATE|NUMBER|HEX|
 |-----------|-------|------|
@@ -31,7 +31,7 @@ These are the number keys to param data stored in hook state. You will learn how
 |URIL|999998|00000000000F423E|
 |COST|999997| 00000000000F423D|
 |LOCK|999996| 00000000000F423C|
-|NUM|000001-999990| 00000000000F4236 - 0000000000000001|
+|NUM|000001-999990| 0000000000000001 - 00000000000F4236|
 
 
 
