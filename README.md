@@ -24,9 +24,10 @@ The hook is installed on an account. URI's can then be added/removed from the ho
 |-----------|-------|
 |999999|URI|
 |999998|URIL|
-|000001-999990|NUM|
 |999997|COST|
-|999999|LOCK|
+|999996|LOCK|
+|000001-999990|NUM|
+
 
 
 
