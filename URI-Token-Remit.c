@@ -1,6 +1,7 @@
 #include "hookapi.h"
 #include <stdint.h>
 
+
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
@@ -18,8 +19,6 @@
         *(((uint64_t*)buf) + i) = *(((uint64_t*)uri) + i); \
     buf[len + 1] += 0xE1U; \
 }
-
-
 
 
 
@@ -86,11 +85,11 @@ uint8_t txn[60000] =
 
 
 
-// START OF THE HOOK ACTIVATION
+// START OF THE HOOK ACTIVATION -----------------------------------------------------------------------------------------
 
 int64_t hook(uint32_t reserved) {
 
-TRACESTR("txn_remit_mint.c: Called.");
+TRACESTR("uri_token_remit.c: Called.");
 
 // ACCOUNT: Hook Account
 uint8_t hook_acct[20];
@@ -108,11 +107,27 @@ TRACEVAR(tt)
 
 // Configure Params
 
+uint8_t cost_buf[8];
+uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
+int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
+uint64_t cost_len = UINT64_FROM_BUF(cost_buf);
+
   uint8_t num_buf[8];
   uint8_t num_key[3] = { 'N', 'U', 'M'};
   int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
   uint64_t num_len = UINT64_FROM_BUF(num_buf);
 
+
+  uint8_t lock_buf[8];
+  uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
+  int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
+  uint64_t lock_len = UINT64_FROM_BUF(lock_buf);
+
+
+  uint8_t pass_buf[8];
+  uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
+  int8_t isPass = otxn_param(SBUF(lock_buf), SBUF(lock_key));
+  uint64_t pass_len = UINT64_FROM_BUF(lock_buf);
 
 
   uint8_t del_buf[8];
@@ -133,10 +148,45 @@ TRACEVAR(tt)
     uri_buffer[0] = uri_len;
     uint8_t uri_key[3] = { 'U', 'R', 'I' };
     uint8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+
+
+
+
+  // GATEWAY -----------------------------------------------------------------------------------------  
     
 
+// Lock state number key
+uint64_t lnum = 0x0000000000000003;
+uint8_t lnum_buf[8] = {0};
+UINT64_TO_BUF(lnum_buf, lnum);
 
-   // HookOn: Invoke Set URIL State
+// Lock state buffer
+ uint64_t lbuf[8];
+ 
+// Check if hook is locked
+int8_t Locked = (state(SBUF(lbuf), SBUF(lnum_buf)));
+
+
+
+//rollback(SBUF("uri_token_remit.c: could not check lock state!"), 1);
+
+
+uint64_t suri_len = UINT64_FROM_BUF(lbuf);
+TRACEHEX(lbuf);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
     if (tt == 72){ 
 
 TRACEHEX( num_buf);
@@ -152,7 +202,7 @@ accept(SBUF("txn_remit_mint.c: WE SET THE URIL"), __LINE__);
 
   
     
-   // HookOn: Invoke Set State
+   // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
     if (tt == 99 && isNum > 0 && isDel <= 0){ 
 
 TRACEHEX(num_buf);
@@ -174,7 +224,7 @@ accept(SBUF("txn_remit_mint.c: WE SET THE STATE."), __LINE__);
 
 
 
-    // HookOn: Invoke Delete State
+    // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
     if (tt == 99 && isDel > 0){
 
 TRACEHEX(del_buf);
@@ -195,7 +245,7 @@ accept(SBUF("txn_remit_mint.c: WE DELETED THE STATE."), __LINE__);
 
 
 
-// HookOn: Incoming Payment   HELP HERE -------------------------------------------------------------------------------------------
+// HookOn: Incoming Payment  -----------------------------------------------------------------------------------------
 if (tt == 00){ 
 
 
