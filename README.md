@@ -47,6 +47,9 @@ This hook is requires your metadata files for the URIs to be available at one ba
 ## Hook Parmeters
 To add and remove state for this hook you will use ```TTINVOKE ``` transactions on the account with the parameter you intend to set:
 
+
+
+
 |PARAM|NUMBER|
 |-------------|----------------|
 
