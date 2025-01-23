@@ -161,8 +161,6 @@ uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 // Check if hook URIL state
 int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
 uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
-TRACEVAR(ulbuf)
-TRACEVAR(reconstructed_uril_value);
 
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
@@ -173,9 +171,9 @@ if (hasUril < 0 && isUri1 > 0)
 rollback(SBUF("Error: This hook is missing a URIL! Please add a URIL to start building this hook."), __LINE__); 
 
 //fix uri buffer
-uri_buffer[0] = uri_len;
+uri_buffer[0] = reconstructed_uril_value;
 int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key));
-TRACEVAR(isUri2)
+
 
 
 // HOOK LOCK -----------------------------------------------------------------------------------------  
@@ -243,8 +241,6 @@ accept(SBUF("Success: Set the COST state."), __LINE__);
 
 if (tt == 99 && isUril > 0){ 
 
-TRACEHEX(unum_buf);
-TRACEHEX(uril_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uril_buf), SBUF(ulnum_buf)) < 0)
@@ -259,9 +255,9 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 
 
 if (tt == 99 && isUri2 > 0){
-	
-TRACEHEX(unum_buf);
-TRACEHEX(uri_buffer);
+
+TRACEVAR(uri_buffer);
+TRACESTR(uri_buffer);	
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(unum_buf)) < 0)
@@ -273,15 +269,12 @@ accept(SBUF("Success: Set a URI state."), __LINE__);
 // HookOn: Invoke Set NUM State -----------------------------------------------------------------------------------------
 
 // Look for base URI
- uint64_t suri[256];
+ uint8_t suri[256];
  suri[0] = reconstructed_uril_value;
-int8_t foundUri = (state(SBUF(suri), SBUF(unum_buf)));
+int8_t foundUri = state(SBUF(suri), SBUF(unum_buf));
 TRACEHEX(suri);
-// Ensure there is a Uri
 
-TRACEVAR(isNum);
-TRACEVAR(foundUri);
-if (tt == 99 && isNum > 0 && foundUri > 0){
+if (tt == 99 && isNum > 0 && foundUri >= 0){
 	
 TRACEHEX(num_buf);
 TRACEHEX(suri);
