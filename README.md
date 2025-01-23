@@ -22,16 +22,7 @@ The hook is installed on an account. URI's can then be added/removed from the ho
  [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
-## Hook State Number Keys
-These are the number keys to param data stored in hook state. They are a 6 digit number that you will HEX and unit64 with the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/). You will learn how to interact with them in the hook parmeters section.
 
-|STATE|NUMBER|HEX|
-|-----------|-------|------|
-|URIL|999999|00000000000F423F|
-|URI|999998|00000000000F423E|
-|COST|999997| 00000000000F423D|
-|LOCK|999996| 00000000000F423C|
-|NUM|000001-999990| 0000000000000001 - 00000000000F4236|
 
 
 
@@ -60,7 +51,16 @@ To add and remove state for this hook you will use ```TTINVOKE ``` transactions 
 |**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with you transaction to unlock it.  Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**DEL**| List the number of the hook state you want to delete.|
 
+## Hook State Number Keys
+These are the number keys to param data stored in hook state. They are a 6 digit number that you will HEX and unit64 with the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/). You will learn how to interact with them in the hook parmeters section.
 
+|STATE|NUMBER|HEX|
+|-----------|-------|------|
+|URIL|999999|00000000000F423F|
+|URI|999998|00000000000F423E|
+|COST|999997| 00000000000F423D|
+|LOCK|999996| 00000000000F423C|
+|NUM|000001-999990| 0000000000000001 - 00000000000F4236|
 
 
 **Example:** of params before hexing
