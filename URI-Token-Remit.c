@@ -99,7 +99,34 @@ otxn_field(otx_acc, 20, sfAccount);
 // To know the type of origin txn
 int64_t tt = otxn_type();
 
-// Configure Params
+
+// Configure State Storage Numbers -----------------------------------------------------------------------------------------
+
+
+// Lock state number
+uint64_t lnum = 0x00000000000F423C;
+uint8_t lnum_buf[8] = {0};
+UINT64_TO_BUF(lnum_buf, lnum);
+
+// COST state number
+uint64_t cnum = 0x00000000000F423E;
+uint8_t cnum_buf[8] = {0};
+UINT64_TO_BUF(cnum_buf, cnum);
+
+// URI state number
+uint64_t unum = 0x00000000000F423E;
+uint8_t unum_buf[8] = {0};
+UINT64_TO_BUF(unum_buf, unum);
+
+// URIL state number
+uint64_t ulnum = 0x00000000000F423E;
+uint8_t ulnum_buf[8] = {0};
+UINT64_TO_BUF(ulnum_buf, ulnum);
+
+
+// Configure Params -----------------------------------------------------------------------------------------
+
+
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
@@ -126,35 +153,30 @@ int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 TRACEVAR(isUril);
 
-// check for lenght prior to uri being built block uri if not present
 
+
+// Configure URIL and URI ----------------------------------------------------------------
+
+
+// URIL state buffer
+ uint8_t ulbuf[8]={0};
+ 
+// Check if hook URIL state
+int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
+uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
+TRACEVAR(reconstructed_uril_value);
 
 uint8_t uri_buffer[256];
-uri_buffer[0] = uri_len;
 int8_t uri_key[3] = { 'U', 'R', 'I' };
-int8_t isUri = otxn_param(uri_buffer + 1, uri_len, SBUF(uri_key));
+int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
 
-// Configure state storage numbers
+//check if has a uril prior to adding uri
+if (hasUril < 0 && isUri1 > 0)
+rollback(SBUF("Error: This hook is missing a URIL! Please add a URIL to start building this hook."), __LINE__); 
 
-// Lock state number
-uint64_t lnum = 0x00000000000F423C;
-uint8_t lnum_buf[8] = {0};
-UINT64_TO_BUF(lnum_buf, lnum);
-
-// COST state number
-uint64_t cnum = 0x00000000000F423E;
-uint8_t cnum_buf[8] = {0};
-UINT64_TO_BUF(cnum_buf, cnum);
-
-// URI state number
-uint64_t unum = 0x00000000000F423E;
-uint8_t unum_buf[8] = {0};
-UINT64_TO_BUF(unum_buf, unum);
-
-// URIL state number
-uint64_t ulnum = 0x00000000000F423E;
-uint8_t ulnum_buf[8] = {0};
-UINT64_TO_BUF(ulnum_buf, ulnum);
+//fix uri buffer
+uri_buffer[0] = uri_len;
+int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key));
 
 
 // HOOK LOCK -----------------------------------------------------------------------------------------  
@@ -237,7 +259,7 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 // HookOn: Invoke Set State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isUri > 0)
+if (tt == 99 && isUri2 > 0)
 	
 TRACEHEX(unum_buf);
 TRACEHEX(uri_buffer);
