@@ -8,28 +8,12 @@ This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based o
 
 The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality.
 
-
-
-
-
-
-
-
-
-
-## Installing the hook
-
-
-
 ## Adding URIs
 
 This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a URI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
 
 ## Hook Parmeters
 To add and remove state for this hook you will use ```TTINVOKE ``` transactions on the account with the parameter you intend to set. You can track your hook state at [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/):
-
-
-
 
 |PARAM|NUMBER|
 |-----------|-------|
