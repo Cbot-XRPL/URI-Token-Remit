@@ -2,7 +2,7 @@
 
 ## URI Token Mint Hook for Xahau Network
 
-This C hook is desgined to automasly distribute RWA or NFTs based on the Xahau hook rule engine. This hook could pontintally be use in rental transactions or in the sale of digital products. You can find our Fine Art Vault example of this hook on Mainnet at address: and our Campsite Rental Tickets on testnet installed at address:.
+This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based on the Xahau hook rule engine. This hook could pontintally be use in rental transactions or in the sale of digital products. You can find our Xahau Art Vault example of this hook on Mainnet at address: and our Campsite Rental Tickets on testnet installed at address:.
 
 ## What Does This Hook do
 
