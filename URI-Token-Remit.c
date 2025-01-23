@@ -161,7 +161,8 @@ uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 // Check if hook URIL state
 int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
 uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
-
+TRACEVAR(ulbuf)
+TRACEVAR(reconstructed_uril_value);
 
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
@@ -277,6 +278,9 @@ accept(SBUF("Success: Set a URI state."), __LINE__);
 int8_t foundUri = (state(SBUF(suri), SBUF(unum_buf)));
 TRACEHEX(suri);
 // Ensure there is a Uri
+
+TRACEVAR(isNum);
+TRACEVAR(foundUri);
 if (tt == 99 && isNum > 0 && foundUri > 0){
 	
 TRACEHEX(num_buf);
@@ -287,7 +291,7 @@ if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
  
 accept(SBUF("Success: Set a URI state."), __LINE__);
-}
+}else(accept(SBUF("fuckk"), __LINE__));
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
