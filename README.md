@@ -9,17 +9,7 @@ This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based o
 The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality.
 
 
-## Tools
 
- [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
-
- [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/)
-
- [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) 
-
- [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
-
- [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
 
@@ -61,6 +51,18 @@ These are the number keys to param data stored in hook state. They are a 6 digit
 |COST|999997| 00000000000F423D|
 |LOCK|999996| 00000000000F423C|
 |NUM|000001-999990| 0000000000000001 - 00000000000F4236|
+
+## Tools
+
+ [Xahau Docs](https://docs.xahau.network/technical/hooks-c-functions)
+
+ [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/)
+
+ [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) 
+
+ [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
+
+ [Richard's Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
 
 **Example:** of params before hexing
