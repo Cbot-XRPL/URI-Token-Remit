@@ -102,26 +102,25 @@ int64_t tt = otxn_type();
 
 // Configure State Storage Numbers -----------------------------------------------------------------------------------------
 
-
-// Lock state number
-uint64_t lnum = 0x00000000000F423C;
-uint8_t lnum_buf[8] = {0};
-UINT64_TO_BUF(lnum_buf, lnum);
-
-// COST state number
-uint64_t cnum = 0x00000000000F423E;
-uint8_t cnum_buf[8] = {0};
-UINT64_TO_BUF(cnum_buf, cnum);
+// URIL state number
+uint64_t ulnum = 0x00000000000F423F;
+uint8_t ulnum_buf[8] = {0};
+UINT64_TO_BUF(ulnum_buf, ulnum);
 
 // URI state number
 uint64_t unum = 0x00000000000F423E;
 uint8_t unum_buf[8] = {0};
 UINT64_TO_BUF(unum_buf, unum);
 
-// URIL state number
-uint64_t ulnum = 0x00000000000F423E;
-uint8_t ulnum_buf[8] = {0};
-UINT64_TO_BUF(ulnum_buf, ulnum);
+// COST state number
+uint64_t cnum = 0x00000000000F423D;
+uint8_t cnum_buf[8] = {0};
+UINT64_TO_BUF(cnum_buf, cnum);
+
+// Lock state number
+uint64_t lnum = 0x00000000000F423C;
+uint8_t lnum_buf[8] = {0};
+UINT64_TO_BUF(lnum_buf, lnum);
 
 
 // Configure Params -----------------------------------------------------------------------------------------
@@ -151,8 +150,6 @@ uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-TRACEVAR(isUril);
-
 
 
 // Configure URIL and URI ----------------------------------------------------------------
@@ -164,7 +161,7 @@ TRACEVAR(isUril);
 // Check if hook URIL state
 int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
 uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
-TRACEVAR(reconstructed_uril_value);
+
 
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
@@ -177,6 +174,7 @@ rollback(SBUF("Error: This hook is missing a URIL! Please add a URIL to start bu
 //fix uri buffer
 uri_buffer[0] = uri_len;
 int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key));
+TRACEVAR(isUri2)
 
 
 // HOOK LOCK -----------------------------------------------------------------------------------------  
@@ -231,7 +229,7 @@ TRACEHEX(cnum);
 TRACEHEX(cost_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(cost_buf), SBUF(cnum)) < 0)
+if (state_set(SBUF(cost_buf), SBUF(cnum_buf)) < 0)
 		rollback(SBUF("Error: Could not set COST state!"), 1);
 
 accept(SBUF("Success: Set the COST state."), __LINE__);
@@ -248,7 +246,7 @@ TRACEHEX(unum_buf);
 TRACEHEX(uril_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uril_buf), SBUF(ulnum)) < 0)
+if (state_set(SBUF(uril_buf), SBUF(ulnum_buf)) < 0)
 		rollback(SBUF("Error: could not set the URIL state!"), 1);
 
 accept(SBUF("Success: Set the URIL state."), __LINE__);
@@ -256,19 +254,40 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 }
 
     
-// HookOn: Invoke Set State -----------------------------------------------------------------------------------------
+// HookOn: Invoke Set URI State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isUri2 > 0)
+if (tt == 99 && isUri2 > 0){
 	
 TRACEHEX(unum_buf);
 TRACEHEX(uri_buffer);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
+if (state_set(SBUF(uri_buffer), SBUF(unum_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
  
 accept(SBUF("Success: Set a URI state."), __LINE__);
+}
+
+// HookOn: Invoke Set NUM State -----------------------------------------------------------------------------------------
+
+// Look for base URI
+ uint64_t suri[256];
+ suri[0] = reconstructed_uril_value;
+int8_t foundUri = (state(SBUF(suri), SBUF(unum_buf)));
+TRACEHEX(suri);
+// Ensure there is a Uri
+if (tt == 99 && isNum > 0 && foundUri > 0){
+	
+TRACEHEX(num_buf);
+TRACEHEX(suri);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
+		rollback(SBUF("Error: could not set the URI state!"), 1);
+ 
+accept(SBUF("Success: Set a URI state."), __LINE__);
+}
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
@@ -321,7 +340,6 @@ rollback(SBUF("Error: This hook only accepts XAH!"), __LINE__);
 uint64_t reconstructed_cbuf_value = UINT64_FROM_BUF(cbuf);
 TRACEVAR(reconstructed_cbuf_value);
 uint64_t reconstructed_amount_value = UINT64_FROM_BUF(amount_buffer);
-TRACEVAR(reconstructed_amount_value);
 
 //Compare payment amount and cost
 if( reconstructed_amount_value == reconstructed_cbuf_value){
@@ -334,7 +352,7 @@ TRACESTR("Payment portion of this hook is now unlocked.");
 }
 
 
-// HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
+// HookOn: URI Token Mint  -----------------------------------------------------------------------------------------
 
 
 if (tt == 00){ 
@@ -343,12 +361,7 @@ if (tt == 00){
 uint64_t snum = 0x0000000000000003;
 uint8_t snum_buf[8] = {0};
 UINT64_TO_BUF(snum_buf, snum);
-//TRACEHEX(snum_buf);
 
-// URIL state number key
-uint64_t unum = 0x00000000000F423E;
-uint8_t unum_buf[8] = {0};
-UINT64_TO_BUF(unum_buf, unum);
 
 // STATE URI BUFFER
  uint64_t suri[256];
