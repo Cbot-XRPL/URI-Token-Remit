@@ -42,8 +42,7 @@ To add and remove state for this hook you will use ```TTINVOKE ``` transactions 
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
-These are the number keys to param data stored in hook state. They are a 6 digit number that you will HEX and unit64 with the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/). You will learn how to interact with them in the hook parmeters section.
-
+These are the number keys to param data stored in hook state.
 |STATE|NUMBER|HEX|
 |-----------|-------|------|
 |URIL|999999|00000000000F423F|
