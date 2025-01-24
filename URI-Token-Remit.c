@@ -122,25 +122,26 @@ uint64_t lnum = 0x00000000000F423C;
 uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
-// COUNT state number
-uint64_t conum = 0x00000000000F423B;
-uint8_t conum_buf[8] = {0};
-UINT64_TO_BUF(conum_buf, conum);
+    // COUNT state number
+    uint64_t conum = 0x00000000000F423B;
+    uint8_t conum_buf[8] = {0};
+    UINT64_TO_BUF(conum_buf, conum);
 
+    // Set up the counter
+    int64_t count = 0;
+    int8_t hasCount = state(&count, sizeof(count), conum_buf, sizeof(conum_buf));
 
-// Configure Params -----------------------------------------------------------------------------------------
+    // Set up count param
+    uint8_t count_param_buf[8] = {0};  // Use a buffer for fetching the parameter
+    uint8_t count_key[5] = {'C', 'O', 'U', 'N', 'T'};  // Parameter key
 
+    // Fetch the parameter into the buffer
+    int8_t isCount = otxn_param(count_param_buf, sizeof(count_param_buf), SBUF(count_key));
+    TRACEHEX(count_param_buf);  // Debug the raw buffer
 
- 
-// Set up the counter
-int64_t count = 0;
-int8_t hasCount = state(SBUF(&count), SBUF(conum_buf));
-
-
-uint8_t count_buf[8];
-uint8_t count_key[5] = { 'C', 'O','U','N','T'};
-int8_t isCount = otxn_param(SBUF(count_buf), SBUF(count_key));
-TRACEVAR(isCount);
+    // Convert the buffer to an integer
+    uint64_t count_param = UINT64_FROM_BUF(count_param_buf);
+    TRACEVAR(count_param);  // Log the converted integer
 
 
 uint8_t cost_buf[8];
@@ -151,28 +152,23 @@ TRACEVAR(isCost);
 uint8_t num_buf[8];
 uint8_t num_key[3] = { 'N', 'U', 'M'};
 int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-TRACEVAR(isNum);
 
 uint8_t lock_buf[8];
 uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
 int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
-TRACEVAR(isLock);
 
 uint8_t pass_buf[8];
 uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
 int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
-TRACEVAR(isPass);
 
 uint8_t del_buf[8];
 uint8_t del_key[3] = { 'D', 'E', 'L'};
 int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
-TRACEVAR(isDel);
 
 uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-TRACEVAR(isUril);
 
 
 // Configure URIL and URI ----------------------------------------------------------------
@@ -207,7 +203,6 @@ int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key
  
 // Check if hook has LOCK state
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
-TRACEVAR(isLocked);
 
 // Check if the hook is locked
 if (isLocked > 0 && isLock < 0){
@@ -230,7 +225,6 @@ TRACESTR("passkey hook is now unlocked.");
 if (tt == 99 && isLock > 0){ 
 
 TRACESTR("Ran invoke to set lock");
-TRACEHEX(lnum);
 TRACEHEX(lock_buf);
 
             //the data       //number key
@@ -248,7 +242,6 @@ accept(SBUF("Success: Set the LOCK state."), __LINE__);
 
 if (tt == 99 && isCost > 0){ 
 
-TRACEHEX(cnum);
 TRACEHEX(cost_buf);
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
@@ -260,16 +253,15 @@ accept(SBUF("Success: Set the COST state."), __LINE__);
 }
 
 
-// HookOn: Invoke Set COST State -----------------------------------------------------------------------------------------
+// HookOn: Invoke Set COUNT State --s--------------------------------------------------------------------------------------
 
 
 if (tt == 99 && isCount > 0){ 
 
-TRACEHEX(cnum);
-TRACEHEX(cost_buf);
 
+                      //data                  //number key
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(count_buf), SBUF(conum_buf)) < 0)
+if (state_set(SBUF(&count_param), SBUF(conum_buf)) < 0)
 		rollback(SBUF("Error: Could not set COUNT state!"), 1);
 
 accept(SBUF("Success: Set the COUNT state."), __LINE__);
@@ -436,6 +428,28 @@ TRACEHEX(suri);
     PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     // TXN: Emit/Send Txn
+    uint8_t emithash[32];
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
+    if (emit_result > 0)
+    {
+      //add to counter and set counter state
+      count--;
+      TRACEVAR(count);
+      if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
+	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
+
+
+        accept(SBUF("Success:Tx emitted success."), __LINE__);
+    }
+    accept(SBUF("Error: Tx emitted failure."), __LINE__);
+
+}
+
+//final gaurds
+
+    _g(1,1);
+    return 0;
+}
     uint8_t emithash[32];
     int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
     if (emit_result > 0)
