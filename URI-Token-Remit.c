@@ -415,7 +415,7 @@ TRACEHEX(suri);
     {
       //add to counter and set counter state
       count--;
-      TRACEHEX(count);
+      TRACEVAR(count);
       if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
 	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
