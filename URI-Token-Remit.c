@@ -123,7 +123,7 @@ uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
 // COUNT state number
-uint64_t conum = 0x00000000000F423C;
+uint64_t conum = 0x00000000000F423B;
 uint8_t conum_buf[8] = {0};
 UINT64_TO_BUF(conum_buf, conum);
 
@@ -134,7 +134,7 @@ UINT64_TO_BUF(conum_buf, conum);
  
 // Set up the counter
 int64_t count = 0;
-int8_t hasCount = state(SBUF(count), SBUF(conum_buf));
+int8_t hasCount = state(SBUF(&count), SBUF(conum_buf));
 
 
 
@@ -142,27 +142,33 @@ int8_t hasCount = state(SBUF(count), SBUF(conum_buf));
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
+TRACEVAR(isCost);
 
 uint8_t num_buf[8];
 uint8_t num_key[3] = { 'N', 'U', 'M'};
 int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
+TRACEVAR(isNum);
 
 uint8_t lock_buf[8];
 uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
 int8_t isLock = otxn_param(SBUF(lock_buf), SBUF(lock_key));
+TRACEVAR(isLock);
 
 uint8_t pass_buf[8];
 uint8_t pass_key[4] = { 'P', 'A', 'S', 'S'};
 int8_t isPass = otxn_param(SBUF(pass_buf), SBUF(pass_key));
+TRACEVAR(isPass);
 
 uint8_t del_buf[8];
 uint8_t del_key[3] = { 'D', 'E', 'L'};
 int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
+TRACEVAR(isDel);
 
 uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
+TRACEVAR(isUril);
 
 
 // Configure URIL and URI ----------------------------------------------------------------
@@ -197,6 +203,7 @@ int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key
  
 // Check if hook has LOCK state
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
+TRACEVAR(isLocked);
 
 // Check if the hook is locked
 if (isLocked > 0 && isLock < 0){
@@ -269,8 +276,7 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 
 if (tt == 99 && isUri2 > 0){
 
-TRACEVAR(uri_buffer);
-TRACESTR(uri_buffer);	
+TRACEVAR(uri_buffer);	
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(unum_buf)) < 0)
@@ -285,7 +291,8 @@ accept(SBUF("Success: Set a URI state."), __LINE__);
  uint8_t suri[256];
  suri[0] = reconstructed_uril_value;
 int8_t foundUri = state(SBUF(suri), SBUF(unum_buf));
-TRACEHEX(suri);
+
+
 
 if (tt == 99 && isNum > 0 && foundUri >= 0){
 	
@@ -299,8 +306,8 @@ if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 
 //add to counter and set counter state
  count++;
- TRACEHEX(count);
- if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+ TRACEVAR(count);
+ if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Set a URI state."), __LINE__);
@@ -317,13 +324,12 @@ TRACEHEX(del_buf);
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
 		rollback(SBUF("Error: could not delete state!"),__LINE__);
-count--;
-TRACEHEX(count);
+
 
 //add to counter and set counter state
  count--;
  TRACEHEX(count);
- if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+ if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Deleted the state."), __LINE__);
@@ -409,7 +415,7 @@ TRACEHEX(suri);
       //add to counter and set counter state
       count--;
       TRACEHEX(count);
-      if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+      if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
 	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 
