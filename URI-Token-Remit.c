@@ -293,8 +293,9 @@ accept(SBUF("Success: Set a URI state."), __LINE__);
 int8_t foundUri = state(SBUF(suri), SBUF(unum_buf));
 
 
+TRACEVAR(isNum);
 
-if (tt == 99 && isNum > 0 && foundUri >= 0){
+if (tt == 99 && foundUri >= 0 && isNum > 0){
 	
 TRACEHEX(num_buf);
 TRACEHEX(suri);
