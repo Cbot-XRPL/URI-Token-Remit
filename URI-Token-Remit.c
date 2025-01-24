@@ -130,11 +130,13 @@ UINT64_TO_BUF(conum_buf, conum);
 
 // Configure Params -----------------------------------------------------------------------------------------
 
-int64_t count = 0;
 
-uint8_t count_buf[8];
-uint8_t count_key[5] = { 'C','O','U','N','T'};
-int8_t isCount = otxn_param(SBUF(count_buf), SBUF(count_key));
+ 
+// Set up the counter
+int64_t count = 0;
+int8_t hasCount = state(SBUF(count), SBUF(conum_buf));
+
+
 
 
 uint8_t cost_buf[8];
@@ -290,11 +292,17 @@ if (tt == 99 && isNum > 0 && foundUri >= 0){
 TRACEHEX(num_buf);
 TRACEHEX(suri);
 
+//get the uri state
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
+
+//add to counter and set counter state
  count++;
  TRACEHEX(count);
+ if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+		rollback(SBUF("Error: could not set the COUNT state!"), 1);
+
 accept(SBUF("Success: Set a URI state."), __LINE__);
 }else(accept(SBUF("fuckk"), __LINE__));
 
@@ -311,6 +319,13 @@ if (state_set(0,0, SBUF(del_buf)) < 0)
 		rollback(SBUF("Error: could not delete state!"),__LINE__);
 count--;
 TRACEHEX(count);
+
+//add to counter and set counter state
+ count--;
+ TRACEHEX(count);
+ if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+		rollback(SBUF("Error: could not set the COUNT state!"), 1);
+
 accept(SBUF("Success: Deleted the state."), __LINE__);
 
 }
@@ -321,6 +336,11 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 
 
 if (tt == 00){ 
+
+//check the 
+if(count <= 0){
+ rollback(SBUF("Error: This hook has no more URI tokens to mint. Contact the owner of this hook for more information!"), __LINE__);   
+}
 
 
 // COST state buffer
@@ -360,7 +380,7 @@ TRACESTR("Payment amounts match.");
 
 TRACESTR("Payment portion of this hook is now unlocked.");
 }else{
-  rollback(SBUF("Error: This Hooks is miss a COST aka URI token sell price!"), __LINE__);  
+  rollback(SBUF("Error: This Hooks is missing a COST aka URI token sell price!"), __LINE__);  
 }
 
 
@@ -369,27 +389,30 @@ TRACESTR("Payment portion of this hook is now unlocked.");
 
 if (tt == 00){ 
 
-// STATE NUMBER KEY
-uint64_t snum = 0x0000000000000003;
-uint8_t snum_buf[8] = {0};
-UINT64_TO_BUF(snum_buf, snum);
 
 
 // STATE URI BUFFER
  uint64_t suri[256];
- suri[0] = 14;
+ suri[0] = reconstructed_uril_value;
    
-if (state(SBUF(suri), SBUF(snum_buf)) < 0)
+if (state(SBUF(suri), SBUF(unum_buf)) < 0)
 		rollback(SBUF("Could not check state!"), 1);
 
 TRACEHEX(suri);
-    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, unum);
+    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + unum + 1);
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
     if (emit_result > 0)
     {
+      //add to counter and set counter state
+      count--;
+      TRACEHEX(count);
+      if (state_set(SBUF(count), SBUF(conum_buf)) < 0)
+	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
+
+
         accept(SBUF("Success:Tx emitted success."), __LINE__);
     }
     accept(SBUF("Error: Tx emitted failure."), __LINE__);
