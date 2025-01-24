@@ -122,8 +122,19 @@ uint64_t lnum = 0x00000000000F423C;
 uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
+// COUNT state number
+uint64_t conum = 0x00000000000F423C;
+uint8_t conum_buf[8] = {0};
+UINT64_TO_BUF(conum_buf, conum);
+
 
 // Configure Params -----------------------------------------------------------------------------------------
+
+int64_t count = 0;
+
+uint8_t count_buf[8];
+uint8_t count_key[5] = { 'C','O','U','N','T'};
+int8_t isCount = otxn_param(SBUF(count_buf), SBUF(count_key));
 
 
 uint8_t cost_buf[8];
@@ -282,7 +293,8 @@ TRACEHEX(suri);
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
- 
+ count++;
+ TRACEHEX(count);
 accept(SBUF("Success: Set a URI state."), __LINE__);
 }else(accept(SBUF("fuckk"), __LINE__));
 
@@ -297,7 +309,8 @@ TRACEHEX(del_buf);
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
 		rollback(SBUF("Error: could not delete state!"),__LINE__);
-
+count--;
+TRACEHEX(count);
 accept(SBUF("Success: Deleted the state."), __LINE__);
 
 }
@@ -346,6 +359,8 @@ TRACESTR("Payment amounts match.");
 }
 
 TRACESTR("Payment portion of this hook is now unlocked.");
+}else{
+  rollback(SBUF("Error: This Hooks is miss a COST aka URI token sell price!"), __LINE__);  
 }
 
 
