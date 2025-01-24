@@ -19,6 +19,17 @@
     buf[len + 1] += 0xE1U; \
 }
 
+//pretty sure this the right way why do you keep fighting me on it
+#define my_memcpy(dest, src, n) ({ \
+    unsigned char* d = (unsigned char*)dest; \
+    const unsigned char* s = (const unsigned char*)src; \
+    for (size_t i = 0; i < n; i++) { \
+        d[i] = s[i]; \
+        GUARD(n); \
+    } \
+    dest; \
+})
+
 // clang-format off tx sizing
 uint8_t txn[60000] =
 {
@@ -319,6 +330,8 @@ TRACEHEX(suri);
 if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
 
+
+
 //add to counter and set counter state
  count++;
  TRACEVAR(count);
@@ -419,37 +432,26 @@ if (tt == 00){
 
 // STATE URI BUFFER
  uint64_t suri[256];
- suri[0] = reconstructed_uril_value;
-   
+ suri[0] = reconstructed_uril_value; 
 if (state(SBUF(suri), SBUF(unum_buf)) < 0)
 		rollback(SBUF("Could not check state!"), 1);
-
 TRACEHEX(suri);
-    PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
+
+// Convert number to a byte buffer
+uint8_t count_buf[8] = {0};
+UINT64_TO_BUF(count_buf, count);
+TRACEVAR(count_buf);
+
+// Append the number buffer to the suri buffer
+my_memcpy(suri + sizeof(reconstructed_uril_value +8), count_buf, sizeof(count_buf));
+
+
+
+
+
+PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     // TXN: Emit/Send Txn
-    uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
-    if (emit_result > 0)
-    {
-      //add to counter and set counter state
-      count--;
-      TRACEVAR(count);
-      if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
-	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
-
-
-        accept(SBUF("Success:Tx emitted success."), __LINE__);
-    }
-    accept(SBUF("Error: Tx emitted failure."), __LINE__);
-
-}
-
-//final gaurds
-
-    _g(1,1);
-    return 0;
-}
     uint8_t emithash[32];
     int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
     if (emit_result > 0)
