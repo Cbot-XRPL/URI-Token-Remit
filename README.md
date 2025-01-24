@@ -136,39 +136,6 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
 
 
 
-
-## How to delete addresses?
-
-To delete you have to create an Invoke transaction from the hook account and use as parameter DEL and the position between 00 to 09 as value. In case there is any address registered with that identifier, it will delete it.
-
-DEL and the position we want to delete between 00 to 09
-
-**Example:**
-
-- DEL: 00
-
-We need to translate DEL keyword to hex. 
-
-- DEL = 44454C
-
-Numbers from 00 to 09 stay the same. No need to translate them.
-
-    const prepared = {
-      TransactionType: "Invoke",
-      Account: your_account_address,
-      Flags: 0,
-      HookParameters: [
-        {
-          HookParameter: {
-            HookParameterName: "44454C",
-            HookParameterValue: "00",
-          }
-        },
-      ],
-      ...networkInfo.txValues,
-    };
-
-
 ## How to install the Forwarder Hook on Mainnet?
 
 Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF490A3992CADB3CD5CCE851FB358B2DE299ABE30DB9E.
