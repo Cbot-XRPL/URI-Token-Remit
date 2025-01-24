@@ -312,7 +312,7 @@ if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Set a URI state."), __LINE__);
-}else(accept(SBUF("fuckk"), __LINE__));
+};
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
@@ -326,7 +326,7 @@ TRACEHEX(del_buf);
 if (state_set(0,0, SBUF(del_buf)) < 0)
 		rollback(SBUF("Error: could not delete state!"),__LINE__);
 
-
+ TRACEHEX(count);
 //add to counter and set counter state
  count--;
  TRACEHEX(count);
