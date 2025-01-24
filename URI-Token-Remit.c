@@ -137,6 +137,10 @@ int64_t count = 0;
 int8_t hasCount = state(SBUF(&count), SBUF(conum_buf));
 
 
+uint8_t count_buf[8];
+uint8_t count_key[5] = { 'C', 'O','U','N','T'};
+int8_t isCount = otxn_param(SBUF(count_buf), SBUF(count_key));
+TRACEVAR(isCount);
 
 
 uint8_t cost_buf[8];
@@ -256,6 +260,24 @@ accept(SBUF("Success: Set the COST state."), __LINE__);
 }
 
 
+// HookOn: Invoke Set COST State -----------------------------------------------------------------------------------------
+
+
+if (tt == 99 && isCount > 0){ 
+
+TRACEHEX(cnum);
+TRACEHEX(cost_buf);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set(SBUF(count_buf), SBUF(conum_buf)) < 0)
+		rollback(SBUF("Error: Could not set COUNT state!"), 1);
+
+accept(SBUF("Success: Set the COUNT state."), __LINE__);
+
+}
+
+
+
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
 
 
@@ -328,7 +350,12 @@ if (state_set(0,0, SBUF(del_buf)) < 0)
 
  TRACEHEX(count);
 //add to counter and set counter state
+if(count >= 1){
  count--;
+}else {
+rollback(SBUF("Error: The counter is broken!"),__LINE__);
+}
+
  TRACEHEX(count);
  if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
