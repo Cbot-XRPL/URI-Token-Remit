@@ -21,17 +21,6 @@
     buf[len + 1] += 0xE1U; \
 }
 
-
-#define my_memcpy(dest, src, n) ({ \
-    unsigned char* d = (unsigned char*)dest; \
-    const unsigned char* s = (const unsigned char*)src; \
-    for (size_t i = 0; GUARD(n), i < (n); i++) { \
-        d[i] = s[i]; \
-    } \
-    dest; \
-})
-
-
 // clang-format off tx sizing
 uint8_t txn[60000] =
 {
@@ -441,14 +430,4 @@ PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     _g(1,1);
     return 0;
-}
-
-
-
-
-
-
-
-
-
 }
