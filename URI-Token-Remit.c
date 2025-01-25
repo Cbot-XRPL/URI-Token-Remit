@@ -304,35 +304,11 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 if (tt == 99 && isUri2 > 0){
 
 TRACEVAR(uri_buffer);	
+TRACEVAR(uri_buffer);	
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(uri_buffer), SBUF(unum_buf)) < 0)
+if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the URI state!"), 1);
- 
-accept(SBUF("Success: Set a URI state."), __LINE__);
-}
-
-// HookOn: Invoke Set NUM State -----------------------------------------------------------------------------------------
-
-// Look for base URI
- uint8_t suri[256];
- suri[0] = reconstructed_uril_value;
-int8_t foundUri = state(SBUF(suri), SBUF(unum_buf));
-
-
-TRACEVAR(isNum);
-
-if (tt == 99 && foundUri >= 0 && isNum > 0){
-	
-TRACEHEX(num_buf);
-TRACEHEX(suri);
-
-//get the uri state
-   #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
-		rollback(SBUF("Error: could not set the URI state!"), 1);
-
-
 
 //add to counter and set counter state
  count++;
@@ -341,7 +317,7 @@ if (state_set(SBUF(suri), SBUF(num_buf)) < 0)
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Set a URI state."), __LINE__);
-};
+}
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
@@ -372,7 +348,6 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 }
 
 
-
 // HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
 
 
@@ -399,7 +374,6 @@ TRACEHEX(cbuf)
 unsigned char amount_buffer[48];
 int64_t amount_len = otxn_field(SBUF(amount_buffer), sfAmount);
 TRACEHEX(amount_buffer);
-
 
 //Ensure the payment is XAH
 if (amount_len != 8)
@@ -430,8 +404,6 @@ TRACESTR("Payment portion of this hook is now unlocked.");
 
 if (tt == 00){ 
 
-
-
 // STATE URI BUFFER
  uint8_t suri[256];
  suri[0] = reconstructed_uril_value; 
@@ -444,17 +416,12 @@ uint8_t count_buf[8] = {0};
 UINT64_TO_BUF(count_buf, count);
 TRACEHEX(count_buf);
 
-/// FAIL HERE
-my_memcpy(suri + sizeof(reconstructed_uril_value), count_buf, sizeof(count_buf));
-
-TRACESTR(suri)
-
-
-PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value + 8);
+// Prepare TX
+PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 9);
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
     if (emit_result > 0)
     {
       //add to counter and set counter state
@@ -474,9 +441,7 @@ PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value + 8);
 
     _g(1,1);
     return 0;
-
-
-
+}
 
 
 
