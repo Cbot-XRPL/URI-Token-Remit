@@ -393,17 +393,21 @@ TRACESTR("Payment portion of this hook is now unlocked.");
 
 if (tt == 00){ 
 
-// STATE URI BUFFER
- uint8_t suri[256];
- suri[0] = reconstructed_uril_value; 
-if (state(SBUF(suri), SBUF(unum_buf)) < 0)
-		rollback(SBUF("Could not check state!"), 1);
-TRACESTR(suri);
-
 // Convert number to a byte buffer
 uint8_t count_buf[8] = {0};
 UINT64_TO_BUF(count_buf, count);
 TRACEHEX(count_buf);
+
+
+
+// STATE URI BUFFER
+ uint8_t suri[256];
+ suri[0] = reconstructed_uril_value; 
+if (state(SBUF(suri), SBUF(count_buf)) < 0)
+		rollback(SBUF("Could not check state!"), 1);
+TRACESTR(suri);
+
+
 
 // Prepare TX
 PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
@@ -413,6 +417,11 @@ PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
     int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
     if (emit_result > 0)
     {
+       // delete state
+         #define SBUF(str) (uint32_t)(str), sizeof(str)
+         if (state_set(0,0, SBUF(count_buf)) < 0)
+		  rollback(SBUF("Error: could not delete state!"),__LINE__);
+
       //add to counter and set counter state
       count--;
       TRACEVAR(count);
