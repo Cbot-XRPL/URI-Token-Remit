@@ -1,6 +1,8 @@
 #include "hookapi.h"
 #include <stdint.h>
 
+#define GUARD(maxiter) _g(__LINE__, (maxiter)+1)
+
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
 {\
@@ -19,16 +21,16 @@
     buf[len + 1] += 0xE1U; \
 }
 
-//pretty sure this the right way why do you keep fighting me on it
+
 #define my_memcpy(dest, src, n) ({ \
     unsigned char* d = (unsigned char*)dest; \
     const unsigned char* s = (const unsigned char*)src; \
-    for (size_t i = 0; i < n; i++) { \
+    for (size_t i = 0; GUARD(n), i < (n); i++) { \
         d[i] = s[i]; \
-        GUARD(n); \
     } \
     dest; \
 })
+
 
 // clang-format off tx sizing
 uint8_t txn[60000] =
@@ -358,7 +360,7 @@ if (state_set(0,0, SBUF(del_buf)) < 0)
 if(count >= 1){
  count--;
 }else {
-rollback(SBUF("Error: The counter is broken!"),__LINE__);
+count = 0;
 }
 
  TRACEHEX(count);
@@ -431,29 +433,28 @@ if (tt == 00){
 
 
 // STATE URI BUFFER
- uint64_t suri[256];
+ uint8_t suri[256];
  suri[0] = reconstructed_uril_value; 
 if (state(SBUF(suri), SBUF(unum_buf)) < 0)
 		rollback(SBUF("Could not check state!"), 1);
-TRACEHEX(suri);
+TRACESTR(suri);
 
 // Convert number to a byte buffer
 uint8_t count_buf[8] = {0};
 UINT64_TO_BUF(count_buf, count);
-TRACEVAR(count_buf);
+TRACEHEX(count_buf);
 
-// Append the number buffer to the suri buffer
-my_memcpy(suri + sizeof(reconstructed_uril_value +8), count_buf, sizeof(count_buf));
+/// FAIL HERE
+my_memcpy(suri + sizeof(reconstructed_uril_value), count_buf, sizeof(count_buf));
+
+TRACESTR(suri)
 
 
-
-
-
-PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
+PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value + 8);
 
     // TXN: Emit/Send Txn
     uint8_t emithash[32];
-    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 9);
     if (emit_result > 0)
     {
       //add to counter and set counter state
@@ -473,4 +474,16 @@ PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
     _g(1,1);
     return 0;
+
+
+
+
+
+
+
+
+
+
+
+
 }
