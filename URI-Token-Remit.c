@@ -345,8 +345,9 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 // HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
 
 
+// Foreign invokes are ruled out, incoming payments will get by, this blocks any other TX type as a gaurd
 if(tt != 00){
-    rollback(SBUF("Error: Wrong transaction type this hook only accepts!"), __LINE__);
+    rollback(SBUF("Error: Wrong transaction type this hook only accepts invokes from the owner and payments from users!"), __LINE__);
 }
 
 
