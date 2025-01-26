@@ -2,15 +2,22 @@
 
 ## URI Token Mint Hook for Xahau Network
 
-This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based on the Xahau hook rule engine. This hook could pontintally be use in rental transactions or in the sale of digital products. You can find our Xahau Art Vault example of this hook on Mainnet at address: and our Campsite Rental Tickets on testnet installed at address:.
+This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based on the Xahau hook rule engine. This hook could pontintally replace a tranfer agent allowing users a secure way to get assets without a broker. This hook could be used to distrube uquie asset ownership documents like, art, real estate, tickets and digtal products. You can find our Xahau Art Vault example of this hook on Mainnet at address: and our Campsite Rental Tickets on testnet installed at address:
 
 ## What Does This Hook do
 
-The hook is installed on an account. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality.
+The hook is installed on an account. The lenght of your URIs in bytes is set is set in a parameter called URIL. The URIs being the EXACT same lenght is key to this hooks function, more on this below. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality. The lock works by allowing the hook owner to set a six digit pass code. If the passcode is not submitted with the payment as a param present the hook will reject payments.
 
 ## Adding URIs
 
-This hook is requires your metadata files for the URIs to be available at one base URI and each file name to corrspond with the number key used when adding them to the hook state. Before you can add your URIs to stage them for future minting you must set a URI or base path lenght in the hook state. the BURI lenght can be updated if need after the hook is already set and URIs are added. A good choise for a base URI is to pin your files to an IFPS folder to ensure they presist. NFTstoage will give you an api key/gateways and allow you to pin to IPFS on the site or from your command line.
+Its key all your URIs have the same Charater counter or the hook will break. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
+
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000001.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000002.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000003.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000004.json
+
+
 
 ## Hook Parmeters
 To add and remove state for this hook you will use ```TTINVOKE``` transactions on the account with the parameter you intend to set. You can track your hook state at [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/):
