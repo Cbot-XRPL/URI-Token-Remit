@@ -6,18 +6,16 @@ This C hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based o
 
 ## What Does This Hook do
 
-The hook is installed on an account. The lenght of your URIs in bytes is set is set in a parameter called URIL. The URIs being the EXACT same lenght is key to this hooks function, more on this below. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. the hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality. The lock works by allowing the hook owner to set a six digit pass code. If the passcode is not submitted with the payment as a param present the hook will reject payments.
+The hook is installed on an account. The lenght of your URIs in bytes is set is set in a parameter called URIL. The URIs being the EXACT same lenght is key to this hooks function, more on this below. URI's can then be added/removed from the hook state via an invoke transactions. You can add the cost you want charge users to mint a uri token. The hook primary fuction is activated when a payment is sent to the account it is installed on. The hook will check a ruleset, mint a URI token, and send it to payees account. This hooks fetures an optional lock system that allows a paskey to set to gate the HOOK ON fuctionality. The lock works by allowing the hook owner to set a six digit pass code. If the passcode is not submitted with the payment as a param present the hook will reject payments.
 
 ## Adding URIs
 
-Its key all your URIs have the same Charater counter or the hook will break. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
+Its key all your URIs have the same Charater counter or the hook will break. Test adding and minting on testnet before using this hook on mainnet. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
 
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**1**.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**2**.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**3**.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**4**.json
-
-
+- ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**1**.json
+- ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**2**.json
+- ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**3**.json
+- ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**4**.json
 
 ## Hook Parmeters
 To add and remove state for this hook you will use ```TTINVOKE``` transactions on the account with the parameter you intend to set. You can track your hook state at [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/):
@@ -26,7 +24,7 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 |-----------|-------|
 |**URIL:**|The lenght in bytes of your base URI after it hex / 2 + 1 . Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URIL to a unit64 before use in hook params. This needs to set before adding the base URI. This can be updated as needed. Stored at namespace number 999998.|
 |**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. This needs to set before adding URI number keys. This can be updated, but if you do update, URI numbers added prior to the change will need to be re-entered. Stored at namespace number 999999.|
-|**NUM:**|The number/name of your spefic URI metadata. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your name/number to unit64 before use in hook params. Name/number your files 01, 02, 03 .. and so on, that way the counter in the hook can file and mint them properly. They can be updated after being added. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
+|**NUM:**|The number of your spefic URI metadata for a uri entry. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your name/number to unit64 before use in hook params. Name/number your files 000001, 000002, 000003 .. and so on, that way the counter in the hook can file and mint them in order. They can be updated after being added. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
 |**COST:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
 |**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed. Stored at namespace number 999997.|
 **COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state.
@@ -168,6 +166,16 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
       ...networkInfo.txValues,
     };
 ```
+
+
+## NFT Metadata and Roytlies
+
+I propose everyone include there roytlie amount in out NFT metadata. We can then write a hook that on URI token purchase, the metadata is read, fee paid, and NFt transfer finished. If you have the hook installed it could also block anyout going TX to non royties hook accounts. This would allow for a consistant hook to be install on all nft users account. This proposed roytie standard would be compadible with URI Token Remit hook.
+
+
+## Disclainmer
+
+I am a self taught coder who is just starting to learn C and hooks. I know theres many ways to clean this hook up a bit. Givin time me or someone an fork to improve on this baseline. Rebuilding this hook with slots would optimal and maybe a future project. If there is any major vulnerabilities please reach out to me asap so I can patch them.
 
 
 ## Last Thoughts
