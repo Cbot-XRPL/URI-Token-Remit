@@ -12,10 +12,10 @@ The hook is installed on an account. The lenght of your URIs in bytes is set is 
 
 Its key all your URIs have the same Charater counter or the hook will break. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
 
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000001.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000002.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000003.json
-ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/000004.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**1**.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**2**.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**3**.json
+ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**4**.json
 
 
 
