@@ -175,7 +175,7 @@ I propose everyone include there roytlie amount in out NFT metadata. We can then
 
 ## Disclainmer
 
-I am a self taught coder who is just starting to learn C and hooks. I know theres many ways to clean this hook up a bit. Givin time me or someone an fork to improve on this baseline. Rebuilding this hook with slots would optimal and maybe a future project. If there is any major vulnerabilities please reach out to me asap so I can patch them.
+I am a self taught coder who is just starting to learn C and hooks. I know theres many ways to clean this hook up a bit. Givin time me or someone an fork to improve on this baseline. Rebuilding this hook with slots would optimal and maybe a future project. this hooks is pretty stable and user freindly with alot of catchs, error messages, and notes. If there is any major vulnerabilities please reach out to me asap so I can patch them.
 
 
 ## Last Thoughts
