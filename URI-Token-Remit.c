@@ -195,13 +195,18 @@ rollback(SBUF("Error: This hook is missing a URIL! Please add a URIL to start bu
 //fix uri buffer
 uri_buffer[0] = reconstructed_uril_value;
 int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key));
-TRACEVAR(reconstructed_uril_value);
-TRACESTR(uri_buffer);
-TRACEVAR(isUri2);
-
 
 
 // HOOK LOCK -----------------------------------------------------------------------------------------  
+
+
+// Check if hook_accid and account_field are the same
+int equal = 0;
+BUFFER_EQUAL(equal, otx_acc, hook_acct, 20);
+
+if(tt == 99 && !equal){
+   rollback(SBUF("Error: Only the owner of this hook can change its settings!"), 1);
+};
 
 
 // Lock state buffer
@@ -338,6 +343,11 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 
 
 // HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
+
+
+if(tt != 00){
+    rollback(SBUF("Error: Wrong transaction type this hook only accepts!"), __LINE__);
+}
 
 
 if (tt == 00){ 
