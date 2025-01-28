@@ -6,7 +6,7 @@ This hook is designed to autonomously distribute URI Tokens (RWA or NFT) using t
 
 ## What Does This Hook do
 
-The hook is installed on an account, with the length of your URIs (in bytes) set through a parameter called URIL. URIs can be added or removed from the hook state via invoke transactions. It is crucial that all URIs have the exact same length, as this consistency is key to the hook's functionality (more details on this below). You can also specify the cost to charge users for minting a URI token. This hook includes an optional lock system, allowing a passkey to be set to gate the "HOOK ON" functionality. Its primary function is triggered when a payment is sent to the account where it is installed. Upon activation, the hook checks a ruleset, mints a URI token, and sends it to the payee's account.
+The hook is installed on an account. The length of your URIs (in bytes) set through a parameter called URIL. URIs and their NUM can be added or removed from the hook state via invoke transactions. It is crucial that all URIs have the exact same length, as this consistency is key to the hook's functionality (more details on this below). You can also specify the cost to charge users for minting a URI token. This hook includes an optional lock system, allowing a passkey to be set to gate the "HOOK ON" functionality. Its primary function of this hook is triggered when a payment is sent to the account where it is installed. Upon activation, the hook checks a ruleset, mints a URI token, and sends it to the payee's account. The URI tokens are minted in the order they are numbered with the NUM param. Upon completion of the URI token mint the assocated URI and NUM key are deleted from hook state. 
 
 ## Lock Feature
 
