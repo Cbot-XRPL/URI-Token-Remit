@@ -10,7 +10,7 @@ The hook is installed on an account. The lenght of your URIs in bytes is set is 
 
 ## Lock Feature
 
-The lock feature displays Xahau Hooks unquie ability to gate incoming transactions. The lock works by allowing the hook owner to set a six digit pass code. If the passcode is not submitted with the payment as a param, and the hook owner has set the lock, the hook will reject payments. this feature would be useful in commerical implementations that want to gate asset distrubtion to qauifed investors or buyers.
+The lock feature demostrates Xahau Hooks unquie ability to gate incoming transactions. The lock works by allowing the hook owner to set a six digit pass code. If the passcode is not submitted with the payment as a param, and the hook owner has set the lock, the hook will reject payments. this feature would be useful in commerical implementations that want to gate asset distrubtion to qauifed investors or buyers.
 
 ## Adding URIs
 
