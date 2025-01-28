@@ -14,7 +14,7 @@ The lock feature displays Xahau Hooks unquie ability to gate incoming transactio
 
 ## Adding URIs
 
-Its key all your URIs have the same Charater counter or the hook will break. Test adding and minting on testnet before using this hook on mainnet. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
+Its key all your URIs have the same Charater count or the hook will break. Test adding and minting on testnet before using this hook on mainnet. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
 
 - ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**1**.json
 - ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**2**.json
@@ -26,25 +26,25 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 
 |PARAM|NUMBER|
 |-----------|-------|
-|**URIL:**|The lenght in bytes of your base URI after it hex / 2 + 1 . Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URIL to a unit64 before use in hook params. This needs to set before adding the base URI. This can be updated as needed. Stored at namespace number 999998.|
-|**URI:**|The base URI pointer to your storage location. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your URI to a hex string before use in hook params. This needs to set before adding URI number keys. This can be updated, but if you do update, URI numbers added prior to the change will need to be re-entered. Stored at namespace number 999999.|
-|**NUM:**|The number of your spefic URI metadata for a uri entry. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your name/number to unit64 before use in hook params. Name/number your files 000001, 000002, 000003 .. and so on, that way the counter in the hook can file and mint them in order. They can be updated after being added. A small handful of numbers are already allocated to seing for this hook 999999-999991 do not hex and use numbers in this range for URIs it will disrute the use of this hook.|
-|**COST:**|How Much XAH you want to charge for a URI emisson. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed. Stored at namespace number 999997.|
-|**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed. Stored at namespace number 999997.|
-**COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state.
-|**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with you transaction to unlock it.  Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
+|**URIL:**|The lenght in bytes of your base URI after it hex / 2 + 1 . Use the XRPL Hex Visualizer Tool to convert your URIL to a unit64 before use in hook params. This needs to set before adding the base URI. This can be updated as needed. Beware if the URIL is not correct URI lenght your state saves and subsiquent mints will fail. You can catch this by looking at you state with XRPL WIN Hook Tracking Tools and ensure a consitant entry pattern.
+|**URI:**|The URI pointer to your metadat. Use the XRPL Hex Visualizer Tool to convert your URI to a hex string before use in hook params. This needs to set at the same time as the NUM param. This can be updated by re-entering the URI with the same NUM key to reset it|
+|**NUM:**|The number of your spefic URI metadata for entry. Use the XRPL Hex Visualizer Tool to convert your name/number to unit64 before use in hook params. Name/number your files 000001, 000002, 000003 .. and so on, that way the counter in the hook can file and mint them in order. They can be updated after being added. A small handful of numbers are already allocated for use in this hook functions. Do not use 999999-999991 for URI token NUMs.|
+|**COST:**|How Much XAH you want to charge for a URI emisson. Use the XRPL Hex Visualizer Tool to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed.|
+|**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the XRPL Hex Visualizer to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed.|
+**COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
+|**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
-These are the number keys to param data stored in hook state.
+These are the number keys to param data stored in hook state. When debuging and looking at your hook state and namespace you will see these keys holding you data. Your not intented to enter these key number with the exception of the NUM with the URI entry.
 |STATE|NUMBER|HEX|
 |-----------|-------|------|
 |URIL|999999|00000000000F423F|
-|URI|999998|00000000000F423E|
+|URI & NUM|000001-999990| 0000000000000001 - 00000000000F4236|
 |COST|999997| 00000000000F423D|
 |LOCK|999996| 00000000000F423C|
 |COUNT|999995| 00000000000F423B|
-|NUM|000001-999990| 0000000000000001 - 00000000000F4236|
+
 
 ## Tools
 
@@ -61,20 +61,25 @@ These are the number keys to param data stored in hook state.
 
 **Example:** of params before hexing
 
-- URI: 68747470733A2F2F746573742F
-- URIL: 14
+- URIL: 77
+- COST: 05
+- LOCK: 589589
+- URI: ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/2534.json
 - NUM: 01
 - DEL: 01
 
- **Example:** of params to add after they have been hexxed (HINT: when using the hook builder you dont HEX the param names only the feilds as descrided above)
 
-- URI: 68747470733A2F2F746573742F
-- URIL: 000000000000000E
-- NUM: 0000000000000001
-- DEL: 0000000000000001
+ **Example:** of params to add after they have been hexxed. Number to unit64 and URI to string. (HINT: when using the hook builder you dont HEX the param names only the input feilds)
+ 
+- 5552494C: 000000000000004D
+- 434F5354: 0000000000000001
+- 4C4F434B: 353839353839
+- 555249: 68747470733A2F2F746573742F
+- 4E554D: 0000000000000001
+- 44454C: 0000000000000001
 
 
- **Example:** On chain submission adding the URIL prior to adding some URI number. (HINT: when using the hook builder you dont HEX the param names only the feilds as descrided above)
+ **Example:** On chain submission adding the URIL prior to adding some URIL number. (HINT: when using the hook builder you dont HEX the param names only the feilds as descrided above)
 ```
     const prepared = {
       TransactionType: "Invoke",
