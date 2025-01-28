@@ -2,7 +2,7 @@
 
 ## URI Token Mint Hook for Xahau Network
 
-This hook is desgined to automasly distribute URI Tokens (RWA or NFTs) based on the Xahau hook rule engine. This hook could pontintally replace a tranfer agent allowing users a secure way to get assets without a broker. This hook will essinally allow you to register unqiue assets for disburtion at a Xahau address. Some potential assets that could be distrubted based on this hook are art, real estate, tickets, and digtal products. You can find our Xahau Art Vault example of this hook on Mainnet at address: and our Concert Rental Tickets on testnet installed at address:
+This hook is desgined to automasly distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could pontintally replace a tranfer agent allowing users a secure way to get assets without a broker. This hook will essinally allow you to register unqiue assets for disburtion at a Xahau address. Some potential assets that could be distrubted based on this hook are art, real estate, tickets, and digtal products. You can find our Xahau Art Vault example of this hook on Mainnet at address: and our Concert Rental Tickets on testnet installed at address:
 
 ## What Does This Hook do
 
