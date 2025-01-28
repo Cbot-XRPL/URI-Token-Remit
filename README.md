@@ -34,8 +34,8 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 |**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the XRPL Hex Visualizer to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed.|
 **COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
 |**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
-|**BROKER:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
-|**ROYLTIES:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
+|**BROKER:**|An optiona feild for a Xahau broker to handle all your URI token transactions and roylaties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to it hexed verison before use in the hook params.|
+|**ROYLTIES:**| The % amount you want to charge for roylaties. Use the XRPL Hex Visualizer Tool to convert your number to xlf decimal.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
