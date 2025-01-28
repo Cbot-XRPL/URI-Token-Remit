@@ -154,6 +154,8 @@ int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
 uint8_t num_buf[8];
 uint8_t num_key[3] = { 'N', 'U', 'M'};
 int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
+uint64_t num_len = UINT64_FROM_BUF(num_buf);
+
 
 uint8_t lock_buf[8];
 uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
@@ -306,6 +308,13 @@ if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
         rollback(SBUF("Error: could not set the URI state!"), 1);
 
 //add to counter and set counter state
+
+if(num_len < count){
+
+
+}
+
+
 count++;
 TRACEVAR(count);
 if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
@@ -412,7 +421,8 @@ UINT64_TO_BUF(count_buf, count);
 uint8_t suri[256];
 suri[0] = reconstructed_uril_value; 
 if (state(SBUF(suri), SBUF(count_buf)) < 0)
-        rollback(SBUF("Could not check state!"), 1);
+        rollback(SBUF("Could not check state your counter is probably off reset the counter!"), 1);
+    TRACESTR(suri);
 
 // Prepare TX
 PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
