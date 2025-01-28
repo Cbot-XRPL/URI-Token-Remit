@@ -174,6 +174,16 @@ uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 
+uint8_t royalties_buf[8];
+uint8_t royalties_key[7] = { 'R', 'O', 'Y', 'A', 'I', 'E', 'S' };
+int8_t isRoyalties = otxn_param(SBUF(royalties_buf), SBUF(royalties_key));
+TRACEVAR(royalties_buf);
+
+uint8_t broker_buf[8];
+uint8_t broker_key[6] = { 'B', 'R', 'O', 'K', 'E', 'R'};
+int8_t isBroker = otxn_param(SBUF(royalties_buf), SBUF(royalties_key));
+TRACEVAR(royalties_buf);
+
 
 // Configure URIL and URI ----------------------------------------------------------------
 
