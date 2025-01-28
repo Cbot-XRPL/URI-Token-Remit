@@ -3,11 +3,11 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
+This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. If you want roytlies paid on your sales you will also need that hook installed You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
 
 ## What Does This Hook do
 
-The hook is installed on an account. The length of your URIs (in bytes) set through a parameter called URIL. URIs and their NUM can be added or removed from the hook state via invoke transactions. It is crucial that all URIs have the exact same length, as this consistency is key to the hook's functionality (more details on this below). You must also specify the cost to charge users for minting a URI token. This hook includes an optional lock system, allowing a passkey to be set to gate the "HOOK ON" functionality. The primary function of this hook is triggered when a payment is sent to the account where it is installed. Upon activation, the hook checks a ruleset, mints a URI token, and sends it to the payee's account. The URI tokens are minted in the order they are numbered with the NUM param. Upon completion of the URI token mint the assocated URI and NUM key are deleted from hook state. 
+The hook is installed on an account. The length of your URIs (in bytes) set through a parameter called URIL. URIs and their NUM can be added or removed from the hook state via invoke transactions. It is crucial that all URIs have the exact same length, as this consistency is key to the hook's functionality (more details on this below). You must specify the cost to charge users for minting a URI token. You may specify a royties amount to be paid and the broker if there is one. This hook includes an optional lock system, allowing a passkey to be set to gate the "HOOK ON" functionality. The primary function of this hook is triggered when a payment is sent to the account where it is installed. Upon activation, the hook checks a ruleset, mints a URI token, and sends it to the payee's account. The URI tokens are minted in the order they are numbered with the NUM param. Upon completion of the URI token mint the assocated URI and NUM key are deleted from hook state. 
 
 ## Lock Feature
 
@@ -34,6 +34,8 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 |**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the XRPL Hex Visualizer to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed.|
 **COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
 |**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
+|**BROKER:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
+|**ROYLTIES:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
@@ -181,11 +183,11 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 
 ## NFT Metadata and Roytlies
 
-I propose everyone include there roytlie amount in out NFT metadata. We can then write a hook that on URI token purchase, the metadata is read, fee paid, and NFt transfer finished. If you have the hook installed it could also block anyout going TX to non royties hook accounts. This would allow for a consistant hook to be install on all nft users account. This proposed roytie standard would be compadible with URI Token Remit hook.
+This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees.
 
 ## Collaberation 
 
-I want to see this hook used and upgraded. If you would like to register assets for sale at a Xahau address reach out to Cody on X @Cbot_XRPL. We are offering advice on Hook install and in some cases building a custom impelentation of this hook.
+I want to see this hook used and upgraded. We are offering advice on Hook install and in some cases building a custom impelentation of this hook. If you would like to register assets for sale at a Xahau address reach out to Cody on X @Cbot_XRPL.
 
 
 ## Disclainmer
