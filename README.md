@@ -193,4 +193,4 @@ This hook is stable and user freindly with alot of catchs, error messages, and n
 
 ## Last Thoughts
 
-Created by @[cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com). Speical thanks to @[ekiserrepe](https://x.com/ekiserrepe) for insperation with the forwarder hook and @[angell_denis](https://x.com/angell_denis) for getting me started with C. Thank you to all of the Xahau commuinty for giving me welcoming place to build and learn !!
+Created by [@cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com). Speical thanks to [@ekiserrepe](https://x.com/ekiserrepe) for insperation with the forwarder hook and [@angell_denis](https://x.com/angell_denis) for getting me started with C. Thank you to all of the Xahau commuinty for giving me welcoming place to build and learn !!
