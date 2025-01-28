@@ -76,12 +76,12 @@ These are the number keys to param data stored in hook state. When debuging and 
 - 5552494C: 000000000000004D
 - 434F5354: 0000000000000001
 - 4C4F434B: 353839353839
-- 555249: 68747470733A2F2F746573742F
+- 555249: 697066733A2F2F62616679626569656F797A337367687232377962696D687373676168616261356F6636616E6D6C646A6A746D75667378656E3232676D656E6A6C342F323533342E6A736F6E
 - 4E554D: 0000000000000001
 - 44454C: 0000000000000001
 
 
- **Example:** On chain submission adding the URIL prior to adding some URIL number. (HINT: when using the hook builder you dont HEX the param names only the feilds as descrided above)
+ **Example:** On chain submission adding the URI and its NUM. (HINT: you must add the URIL before adding any URIs. Having the correct URI lenght setting is imperative.)
 ```
     const prepared = {
       TransactionType: "Invoke",
