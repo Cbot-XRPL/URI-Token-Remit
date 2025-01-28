@@ -3,7 +3,7 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. If you want roytlies paid on your sales you will also need a broker hook installed on the issuing account. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
+This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
 
 ## What Does This Hook do
 
@@ -183,7 +183,7 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 
 ## NFT Metadata and Roytlies
 
-This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees.
+This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees. We will be relaing a NFT and Roytlies proposal ourselfs coving what we belive is the ideal design for a roytlies hook and how broker should handle that hook. Our proposal will be based on the basic idea that users will install the hook on their account and during a URI token sale the hook will reads the royties from hook state and pay it accordingly. If the user trys to buy or sell to a person without the roytles hook they will be blocked. Any issuing software can also check for this hook if they want to charge roylties. This will create a free trade NFT market where paying roytlies is inescapable for the user.
 
 ## Collaberation 
 
