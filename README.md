@@ -182,12 +182,15 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 
 I propose everyone include there roytlie amount in out NFT metadata. We can then write a hook that on URI token purchase, the metadata is read, fee paid, and NFt transfer finished. If you have the hook installed it could also block anyout going TX to non royties hook accounts. This would allow for a consistant hook to be install on all nft users account. This proposed roytie standard would be compadible with URI Token Remit hook.
 
+## Collaberation 
+I want to see this hook used and upgraded. If you would like to register assets for sale at a Xahau address reach out to Cody on X @Cbot_XRPL. We are offering advice on Hook install and in some cases building a custom impelentation of this hook.
+
 
 ## Disclainmer
 
-I am a self taught coder who is just starting to learn C and hooks. I know theres many ways to clean this hook up a bit. Givin time me or someone an fork to improve on this baseline. Rebuilding this hook with slots would optimal and maybe a future project. this hooks is pretty stable and user freindly with alot of catchs, error messages, and notes. If there is any major vulnerabilities please reach out to me asap so I can patch them.
+This hook is stable and user freindly with alot of catchs, error messages, and notes. With that being said this hook was written for the Xahau Hackaton on a timeframe. I know there is many ways to clean this hook up a bit. There is serval upgrades that will eventully be edited into the code. If you find any major vulnerabilities please reach out to me asap so I can patch them. Cbot Labs INC. and specially Cody the author of this code do not acccpt any liablty for the use of this hook. Use this hook at your own expence. Anyone using this hook should do so on testnet until they fully understand its fuction.
 
 
 ## Last Thoughts
 
-Created by @[cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com)
+Created by @[cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com). Speical thanks to @[ekiserrepe](https://x.com/ekiserrepe) for insperation with the forwarder hook and @[angell_denis](https://x.com/angell_denis) for getting me started with C. Thank you to all of the Xahau commuinty for giving me welcoming place to build and learn !!
