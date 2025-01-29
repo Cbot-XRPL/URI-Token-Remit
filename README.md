@@ -3,7 +3,7 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. If you want roytlies paid on your sales you will also need that hook installed You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
+This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. This hook is complaint with current NFT standard XLS-53 and will work with the upcoming Bidds marketplace. If you want roytlies paid on your sales you will also need that hook installed You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
 
 ## What Does This Hook do
 
@@ -35,7 +35,7 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 **COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
 |**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**BROKER:**|An optiona feild for a Xahau broker to handle all your URI token transactions and roylaties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to it hexed verison before use in the hook params.|
-|**ROYLTIES:**| The % amount you want to charge for roylaties. Use the XRPL Hex Visualizer Tool to convert your number to xlf decimal.|
+|**ROYLTIES:**| The % amount you want to charge for roylaties. This need to be a number 1-100 for the precentage you want to charge. Use the XRPL Hex Visualizer Tool to convert your number to a unit64.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
