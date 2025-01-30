@@ -1,6 +1,7 @@
 #include "hookapi.h"
 #include <stdint.h>
 
+#define GUARD(maxiter) _g(__LINE__, (maxiter)+1)
 
 // Account builder for tx
 #define ACCOUNT_TO_BUF(buf_raw, i)\
@@ -35,8 +36,8 @@ uint8_t txn[60000] =
 /*  22,  74 */   0x81U, 0x14U, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,                                  /* srcacc  */
 /*  22,  96 */   0x83U, 0x14U, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,                                  /* dstacc  */
 /* 116, 118 */   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,    /* emit detail */
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 
 /*   3, 234 */  0xE0U, 0x5CU, 0x75U,
 /*   1, 237 */  0xE1U,
@@ -103,7 +104,6 @@ int64_t tt = otxn_type();
 
 // Configure State Storage Numbers -----------------------------------------------------------------------------------------
 
-
 // URIL state number
 uint64_t ulnum = 0x00000000000F423F;
 uint8_t ulnum_buf[8] = {0};
@@ -124,38 +124,36 @@ uint64_t lnum = 0x00000000000F423C;
 uint8_t lnum_buf[8] = {0};
 UINT64_TO_BUF(lnum_buf, lnum);
 
-// COUNT state number
-uint64_t conum = 0x00000000000F423B;
-uint8_t conum_buf[8] = {0};
-UINT64_TO_BUF(conum_buf, conum);
+    // COUNT state number
+    uint64_t conum = 0x00000000000F423B;
+    uint8_t conum_buf[8] = {0};
+    UINT64_TO_BUF(conum_buf, conum);
 
+    // Set up the counter
+    int64_t count = 0;
+    int8_t hasCount = state(&count, sizeof(count), conum_buf, sizeof(conum_buf));
 
-// Configure Parameters -----------------------------------------------------------------------------------------
+    // Set up count param
+    uint8_t count_param_buf[8] = {0};  // Use a buffer for fetching the parameter
+    uint8_t count_key[5] = {'C', 'O', 'U', 'N', 'T'};  // Parameter key
 
+    // Fetch the parameter into the buffer
+    int8_t isCount = otxn_param(count_param_buf, sizeof(count_param_buf), SBUF(count_key));
+    TRACEHEX(count_param_buf);  // Debug the raw buffer
 
-// Set up the counter
-int64_t count = 0;
-int8_t hasCount = state(&count, sizeof(count), conum_buf, sizeof(conum_buf));
+    // Convert the buffer to an integer
+    uint64_t count_param = UINT64_FROM_BUF(count_param_buf);
+    TRACEVAR(count_param);  // Log the converted integer
 
-// Set up count param
-uint8_t count_param_buf[8] = {0};  // Use a buffer for fetching the parameter
-uint8_t count_key[5] = {'C', 'O', 'U', 'N', 'T'};  // Parameter key
-
-// Fetch the parameter into the buffer
-int8_t isCount = otxn_param(count_param_buf, sizeof(count_param_buf), SBUF(count_key));
-
-// Convert the buffer to an integer
-uint64_t count_param = UINT64_FROM_BUF(count_param_buf);
 
 uint8_t cost_buf[8];
 uint8_t cost_key[4] = { 'C', 'O', 'S','T'};
 int8_t isCost = otxn_param(SBUF(cost_buf), SBUF(cost_key));
+TRACEVAR(isCost);
 
 uint8_t num_buf[8];
 uint8_t num_key[3] = { 'N', 'U', 'M'};
 int8_t isNum = otxn_param(SBUF(num_buf), SBUF(num_key));
-uint64_t num_len = UINT64_FROM_BUF(num_buf);
-
 
 uint8_t lock_buf[8];
 uint8_t lock_key[4] = { 'L', 'O', 'C', 'K'};
@@ -179,8 +177,8 @@ uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 
 
 // URIL state buffer
-uint8_t ulbuf[8]={0};
-
+ uint8_t ulbuf[8]={0};
+ 
 // Check if hook URIL state
 int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
 uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
@@ -188,7 +186,6 @@ uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
 int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
-
 
 //check if has a uril prior to adding uri
 if (hasUril < 0 && isUri1 > 0)
@@ -199,21 +196,20 @@ uri_buffer[0] = reconstructed_uril_value;
 int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key));
 
 
-// HOOK LOCK -----------------------------------------------------------------------------------------  
 
+// HOOK LOCK -----------------------------------------------------------------------------------------  
 
 // Check if hook_accid and account_field are the same
 int equal = 0;
 BUFFER_EQUAL(equal, otx_acc, hook_acct, 20);
-
 if(tt == 99 && !equal){
    rollback(SBUF("Error: Only the owner of this hook can change its settings!"), 1);
 };
 
 
 // Lock state buffer
-uint8_t lbuf[8]={0};
-
+ uint8_t lbuf[8]={0};
+ 
 // Check if hook has LOCK state
 int8_t isLocked = state(SBUF(lbuf), SBUF(lnum_buf));
 
@@ -226,7 +222,7 @@ uint64_t reconstructed_pass_value = UINT64_FROM_BUF(pass_buf);
 TRACEVAR(reconstructed_pass_value);
 
 //Compare lock and passkey
-if(reconstructed_lbuf_value != reconstructed_pass_value){
+ if(reconstructed_lbuf_value != reconstructed_pass_value){
 rollback(SBUF("Error: Incorrect passkey!"), __LINE__);
 }
 TRACESTR("passkey hook is now unlocked.");
@@ -237,13 +233,13 @@ TRACESTR("passkey hook is now unlocked.");
 
 if (tt == 99 && isLock > 0){ 
 
-TRACESTR("Ran invoke to set lock.");
+TRACESTR("Ran invoke to set lock");
 TRACEHEX(lock_buf);
 
             //the data       //number key
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(lock_buf), SBUF(lnum_buf)) < 0)
-        rollback(SBUF("Error: Could not set LOCK state!"), 1);
+		rollback(SBUF("Error: Could not set LOCK state!"), 1);
 
 accept(SBUF("Success: Set the LOCK state."), __LINE__);
 
@@ -257,28 +253,30 @@ if (tt == 99 && isCost > 0){
 
 TRACEHEX(cost_buf);
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(cost_buf), SBUF(cnum_buf)) < 0)
-        rollback(SBUF("Error: Could not set COST state!"), 1);
+		rollback(SBUF("Error: Could not set COST state!"), 1);
 
 accept(SBUF("Success: Set the COST state."), __LINE__);
 
 }
 
 
-// HookOn: Invoke Set COUNT State ----------------------------------------------------------------------------------------
+// HookOn: Invoke Set COUNT State --s--------------------------------------------------------------------------------------
 
 
 if (tt == 99 && isCount > 0){ 
 
-                    //data         //number key
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+
+                      //data                  //number key
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(&count_param), SBUF(conum_buf)) < 0)
-        rollback(SBUF("Error: Could not set COUNT state!"), 1);
+		rollback(SBUF("Error: Could not set COUNT state!"), 1);
 
 accept(SBUF("Success: Set the COUNT state."), __LINE__);
 
 }
+
 
 
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
@@ -287,9 +285,9 @@ accept(SBUF("Success: Set the COUNT state."), __LINE__);
 if (tt == 99 && isUril > 0){ 
 
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uril_buf), SBUF(ulnum_buf)) < 0)
-        rollback(SBUF("Error: could not set the URIL state!"), 1);
+		rollback(SBUF("Error: could not set the URIL state!"), 1);
 
 accept(SBUF("Success: Set the URIL state."), __LINE__);
 
@@ -299,26 +297,20 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 // HookOn: Invoke Set URI State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isUri1 > 0){
+if (tt == 99 && isUri2 > 0){
 
 TRACEVAR(uri_buffer);	
+TRACEVAR(uri_buffer);	
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
-        rollback(SBUF("Error: could not set the URI state!"), 1);
+		rollback(SBUF("Error: could not set the URI state!"), 1);
 
 //add to counter and set counter state
-
-if(num_len < count){
-
-
-}
-
-
-count++;
-TRACEVAR(count);
-if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
-        rollback(SBUF("Error: could not set the COUNT state!"), 1);
+ count++;
+ TRACEVAR(count);
+ if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
+		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Set a URI state."), __LINE__);
 }
@@ -331,20 +323,21 @@ if (tt == 99 && isDel > 0){
 
 TRACEHEX(del_buf);
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
-        rollback(SBUF("Error: could not delete state!"),__LINE__);
+		rollback(SBUF("Error: could not delete state!"),__LINE__);
 
-TRACEHEX(count);
+ TRACEHEX(count);
 //add to counter and set counter state
 if(count >= 1){
-count--;
+ count--;
 }else {
 count = 0;
 }
 
-if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
-        rollback(SBUF("Error: could not set the COUNT state!"), 1);
+ TRACEHEX(count);
+ if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
+		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Deleted the state."), __LINE__);
 
@@ -354,25 +347,19 @@ accept(SBUF("Success: Deleted the state."), __LINE__);
 // HookOn: Incoming Payment Gateway  -----------------------------------------------------------------------------------------
 
 
-if(tt != 00){
-    rollback(SBUF("Error: Wrong transaction type this hook only accepts!"), __LINE__);
-}
-
-
 if (tt == 00){ 
 
-//check the hook has uri tokens
+//check the 
 if(count <= 0){
-rollback(SBUF("Error: This hook has no more URI tokens to mint. Contact the owner of this hook for more information!"), __LINE__);   
+ rollback(SBUF("Error: This hook has no more URI tokens to mint. Contact the owner of this hook for more information!"), __LINE__);   
 }
 
-// COST state buffer
-uint8_t cbuf[8]={0};
 
+// COST state buffer
+ uint8_t cbuf[8]={0};
+ 
 // Check if hook hook COST state value
 int8_t hasCost = state(SBUF(cbuf), SBUF(cnum_buf));
-TRACEVAR(hasCost);
-
 
 // Check if the hook has cost
 if (hasCost > 0){
@@ -404,7 +391,7 @@ TRACESTR("Payment amounts match.");
 
 TRACESTR("Payment portion of this hook is now unlocked.");
 }else{
-rollback(SBUF("Error: This Hooks is missing a COST aka URI token sell price!"), __LINE__);  
+  rollback(SBUF("Error: This Hooks is missing a COST aka URI token sell price!"), __LINE__);  
 }
 
 
@@ -416,37 +403,43 @@ if (tt == 00){
 // Convert number to a byte buffer
 uint8_t count_buf[8] = {0};
 UINT64_TO_BUF(count_buf, count);
+TRACEHEX(count_buf);
+
+
 
 // STATE URI BUFFER
-uint8_t suri[256];
-suri[0] = reconstructed_uril_value; 
+ uint8_t suri[256];
+ suri[0] = reconstructed_uril_value; 
 if (state(SBUF(suri), SBUF(count_buf)) < 0)
-        rollback(SBUF("Could not check state your counter is probably off reset the counter!"), 1);
-    TRACESTR(suri);
+		rollback(SBUF("Could not check state!"), 1);
+TRACESTR(suri);
+
+
 
 // Prepare TX
 PREPARE_REMIT_TXN(hook_acct, otx_acc, suri, reconstructed_uril_value);
 
-// TXN: Emit/Send Txn
-uint8_t emithash[32];
-int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
-if (emit_result > 0)
-{
-// delete state
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(0,0, SBUF(count_buf)) < 0)
-rollback(SBUF("Error: could not delete state!"),__LINE__);
+    // TXN: Emit/Send Txn
+    uint8_t emithash[32];
+    int64_t emit_result = emit(SBUF(emithash), txn, BYTES_LEN + reconstructed_uril_value + 1);
+    if (emit_result > 0)
+    {
+       // delete state
+         #define SBUF(str) (uint32_t)(str), sizeof(str)
+         if (state_set(0,0, SBUF(count_buf)) < 0)
+		  rollback(SBUF("Error: could not delete state!"),__LINE__);
 
-//add to counter and set counter state
-count--;
-TRACEVAR(count);
-if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
-rollback(SBUF("Error: could not set the COUNT state!"), 1);
+      //add to counter and set counter state
+      count--;
+      TRACEVAR(count);
+      if (state_set(SBUF(&count), SBUF(conum_buf)) < 0)
+	  rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 
-accept(SBUF("Success:Tx emitted success."), __LINE__);
-}
+        accept(SBUF("Success:Tx emitted success."), __LINE__);
+    }
     accept(SBUF("Error: Tx emitted failure."), __LINE__);
+
 }
 
 //final gaurds
