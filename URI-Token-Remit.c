@@ -178,19 +178,7 @@ uint8_t roy_buf[8];
 uint8_t roy_key[3] = { 'R', 'O', 'Y' };
 int8_t isRoyalties = otxn_param(SBUF(roy_buf), SBUF(roy_key));
 uint64_t roy_int = UINT64_FROM_BUF(roy_buf);
-int64_t small_amount = float_set(-1, roy_int);
-TRACEHEX(roy_buf);
-TRACEVAR(roy_int);
-TRACEXFL(small_amount);
-
-
-
-
-uint8_t bro_buf[20];
-uint8_t bro_key[3] = { 'B', 'R', 'O'};
-int8_t isBroker = otxn_param(SBUF(bro_buf), SBUF(bro_key));
-TRACEHEX(bro_buf);
-
+int64_t roy_small_amount = float_set(-2, roy_int);
 
 
 // Configure URIL and URI ----------------------------------------------------------------
@@ -299,28 +287,23 @@ accept(SBUF("Success: Set the COUNT state."), __LINE__);
 }
 
 
-// HookOn: Invoke Set COST State -----------------------------------------------------------------------------------------
+// HookOn: Invoke Set Royalties State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isCost > 0){ 
+if (tt == 99 && isRoyalties > 0){ 
 
-TRACEHEX(cost_buf);
+TRACEHEX(roy_buf);
+TRACEVAR(roy_int);
+TRACEXFL(roy_small_amount);
+
 
 #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(cost_buf), SBUF(cnum_buf)) < 0)
-        rollback(SBUF("Error: Could not set COST state!"), 1);
+if (state_set(SBUF(roy_buf), SBUF(cnum_buf)) < 0)
+        rollback(SBUF("Error: Could not set Roylties state!"), 1);
 
 accept(SBUF("Success: Set the COST state."), __LINE__);
 
 }
-
-
-
-
-
-
-
-
 
 
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
