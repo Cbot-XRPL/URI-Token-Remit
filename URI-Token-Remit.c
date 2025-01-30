@@ -167,13 +167,20 @@ uint8_t del_buf[8];
 uint8_t del_key[3] = { 'D', 'E', 'L'};
 int8_t isDel = otxn_param(SBUF(del_buf), SBUF(del_key));
 
+uint8_t roy_buf[8];
+uint8_t roy_key[3] = { 'R', 'O', 'Y' };
+uint8_t royalty_key[7] = { 'R', 'O', 'Y', 'A', 'L', 'T', 'Y' };
+int8_t isRoyalties = otxn_param(roy_buf, 8, roy_key, sizeof(roy_key));
+uint64_t roy_int = UINT64_FROM_BUF(roy_buf);
+int64_t small_amount = float_set(-1, roy_int);
+
+
+
+// Configure URIL and URI ----------------------------------------------------------------
 uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-
-
-// Configure URIL and URI ----------------------------------------------------------------
 
 
 // URIL state buffer
@@ -340,6 +347,20 @@ count = 0;
 		rollback(SBUF("Error: could not set the COUNT state!"), 1);
 
 accept(SBUF("Success: Deleted the state."), __LINE__);
+
+}
+
+
+// HookOn: Incoming Royalties Invoke  -----------------------------------------------------------------------------------------
+
+
+if (tt == 99 && isRoyalties > 0){ 
+
+TRACEVAR(roy_int);
+TRACEXFL(small_amount);
+if (state_set(&small_amount, sizeof(small_amount), royalty_key, sizeof(royalty_key)) < 0)
+    rollback(SBUF("Error: Could not set ROY state!"), 1);
+accept(SBUF("Success: Set the ROY state."), __LINE__);
 
 }
 
