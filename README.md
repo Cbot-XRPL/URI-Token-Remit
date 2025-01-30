@@ -11,11 +11,11 @@ The hook is installed on an account. The length of your URIs (in bytes) set thro
 
 ## Lock Feature
 
-The lock feature demonstrates Xahau Hooks' unique ability to gate incoming transactions. It works by allowing the hook owner to set a six-digit passcode. If the passcode is not submitted with the payment as a parameter and the lock has been enabled by the hook owner, the hook will reject the payment. This feature is particularly useful for commercial implementations that require gating asset distribution to qualified investors or buyers.
+The lock feature demonstrates Xahau Hooks' unique ability to gate incoming transactions. It works by allowing the hook owner to set a six-digit passcode. If the passcode is not submitted with the payment as a parameter, and the lock has been enabled by the hook owner, the hook will reject the payment. This feature is particularly useful for commercial implementations that require gating asset distribution to qualified investors or buyers.
 
 ## Adding URIs
 
-Its key all your URIs have the same Charater count or the hook will break. Test adding and minting on testnet before using this hook on mainnet. Xahau is very specfic about predicting sizes of data passed around. Its sujested your metadata files for the URIs to be available at one base URI like a folder on IPFS. See the example of how I achived a consitant char count accross URIS.
+It's key that all your URIs have the same character count, or the hook will break. Test adding and minting on the testnet before using this hook on the mainnet. Xahau is very specific about predicting the sizes of data passed around. It's suggested that your metadata files for the URIs be available at one base URI, like a folder on IPFS. See the example of how I achieved a consistent character count across URIs.
 
 - ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**1**.json
 - ipfs://bafybeieoyz3sghr27ybimhssgahaba5of6anmldjjtmufsxen22gmenjl4/00000**2**.json
@@ -25,18 +25,18 @@ Its key all your URIs have the same Charater count or the hook will break. Test 
 ## Hook Parmeters
 To add and remove state for this hook you will use ```TTINVOKE``` transactions on the account with the parameter you intend to set. You can track your hook state at [XRPLWin Hook Testnet](https://xahau-testnet.xrplwin.com/):
 
-|PARAM|NUMBER|
-|-----------|-------|
-|**URIL:**|The lenght in bytes of your base URI after it hex / 2 + 1 . Use the XRPL Hex Visualizer Tool to convert your URIL to a unit64 before use in hook params. This needs to set before adding the base URI. This can be updated as needed. Beware if the URIL is not correct URI lenght your state saves and subsiquent mints will fail. You can catch this by looking at you state with XRPL WIN Hook Tracking Tools and ensure a consitant entry pattern.
-|**URI:**|The URI pointer to your metadat. Use the XRPL Hex Visualizer Tool to convert your URI to a hex string before use in hook params. This needs to set at the same time as the NUM param. This can be updated by re-entering the URI with the same NUM key to reset it|
-|**NUM:**|The number of your spefic URI metadata for entry. Use the XRPL Hex Visualizer Tool to convert your name/number to unit64 before use in hook params. Name/number your files 000001, 000002, 000003 .. and so on, that way the counter in the hook can file and mint them in order. They can be updated after being added. A small handful of numbers are already allocated for use in this hook functions. Do not use 999999-999991 for URI token NUMs.|
-|**COST:**|How Much XAH you want to charge for a URI emisson. Use the XRPL Hex Visualizer Tool to convert your COST number to a unit64 before use in hook params. This needs to set before adding URI number keys. This can be updated as needed.|
-|**LOCK:**|A numerical passkey. If this param is set hook users will have to submit the PASS param to unlock and use the hooks fuctionality. Use the XRPL Hex Visualizer to convert your LOCK number to a unit64 before use in hook params. This can be updated as needed.|
-**COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
-|**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
-|**BROKER:**|An optiona feild for a Xahau broker to handle all your URI token transactions and roylaties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to it hexed verison before use in the hook params.|
-|**ROYLTIES:**| The % amount you want to charge for roylaties. This need to be a number 1-100 for the precentage you want to charge. Use the XRPL Hex Visualizer Tool to convert your number to a unit64.|
-|**DEL**| List the number of the hook state you want to delete.|
+|PARAM|NUMBER|  
+|-----------|-------|  
+|**URIL:**|The length in bytes of your base URI after it hex / 2 + 1. Use the XRPL Hex Visualizer Tool to convert your URIL to a uint64 before use in hook params. This needs to be set before adding the base URI. This can be updated as needed. Beware, if the URIL is not the correct URI length, your state saves and subsequent mints will fail. You can catch this by looking at your state with XRPL WIN Hook Tracking Tools and ensuring a consistent entry pattern.|  
+|**URI:**|The URI pointer to your metadata. Use the XRPL Hex Visualizer Tool to convert your URI to a hex string before use in hook params. This needs to be set at the same time as the NUM param. This can be updated by re-entering the URI with the same NUM key to reset it.|  
+|**NUM:**|The number of your specific URI metadata for entry. Use the XRPL Hex Visualizer Tool to convert your name/number to uint64 before use in hook params. Name/number your files 000001, 000002, 000003... and so on; that way, the counter in the hook can file and mint them in order. They can be updated after being added. A small handful of numbers are already allocated for use in this hook's functions. Do not use 999999-999991 for URI token NUMs.|  
+|**COST:**|How much XAH you want to charge for a URI emission. Use the XRPL Hex Visualizer Tool to convert your COST number to a uint64 before use in hook params. This needs to be set before adding URI number keys. This can be updated as needed.|  
+|**LOCK:**|A numerical passkey. If this param is set, hook users will have to submit the PASS param to unlock and use the hook's functionality. Use the XRPL Hex Visualizer to convert your LOCK number to a uint64 before use in hook params. This can be updated as needed.|  
+|**COUNT:**|An optional param to adjust the hook's counter state. This param does not need to be used in most cases; the hook will keep count when adding and removing state. If you reset a certain piece of state or deal with hook errors, there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the XRPL WIN Hook Tracking Tools.|  
+|**PASS:**|A numerical passkey. If a hook is locked, this param must be submitted as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a uint64 before use in hook params.|  
+|**BROKER:**|An optional field for a Xahau broker to handle all your URI token transactions and royalties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to its hexed version before use in the hook params.|  
+|**ROYALTIES:**|The % amount you want to charge for royalties. This needs to be a number 1-99 for the percentage you want to charge. Decimals are not allowed in this build. Use the XRPL Hex Visualizer Tool to convert your number to a uint64.|  
+|**DEL**|List the number of the hook state you want to delete.|  
 
 ## Hook State Number Keys
 These are the number keys to param data stored in hook state. When debuging and looking at your hook state and namespace you will see these keys holding you data. Your not intented to enter these key number with the exception of the NUM with the URI entry.
@@ -47,6 +47,8 @@ These are the number keys to param data stored in hook state. When debuging and 
 |COST|999997| 00000000000F423D|
 |LOCK|999996| 00000000000F423C|
 |COUNT|999995| 00000000000F423B|
+|ROY|ROYALTY| 00000000000F423B|
+
 
 
 ## Tools
@@ -157,7 +159,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
 
 ## How to install the URI Token Remit Hook on Mainnet?
 
-Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF490A3992CADB3CD5CCE851FB358B2DE299ABE30DB9E.
+Same as Testnet but changing the hookhash. The Hookhash is AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E.
 
 1. You can do it by [XRPLWin Hook Install Tool](https://xahau.xrplwin.com/tools/hook/from-hash)
 
@@ -171,9 +173,9 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "D22582E8BAF59FC682DEF490A3992CADB3CD5CCE851FB358B2DE299ABE30DB9E",
-            "HookNamespace": "0000000000000000000000000000000000000000000000000000000000000000",
-            "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE",
+            "HookHash": "AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E",
+            "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
+            "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
         }
       ],
@@ -184,11 +186,11 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 
 ## Current NFT Metadata and Roytlies
 
-This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a Royalty param on this hook will ensure a broker can be prepared to read pay it accordingly. Beware a broker controls the trade of your asset and may charge fees. 
+This hook is compliant with the Royties and brokerage standard [XLS-53d standard](https://github.com/XRPLF/XRPL-Standards/discussions/148). Setting a Royalty param on this hook will ensure a broker can be prepared to read pay it accordingly. Beware a broker controls the trade of your asset and may charge fees.
 
 ## Promosed NFT Metadata and Roytlies
 
-I propose We write a hook that on URI token purchase, the issuer hook state is read, fee paid, and NFt transfer finished. The hook installed it could also block anyout going TX to non royties hook accounts. Any minting app could block a transaction if the user does not have the roylies hook. This hook would have a very basic code and be very light weight on users accounts and the network. This proposed roytie standard would be compadible with XLS-53 and this URI Token Remit hook. Brokers and a Roylties hook could co exist.
+I propose we write a hook that, upon URI token purchase, reads the issuer's hook state, ensures the fee is paid, and completes the NFT transfer. Once installed, the hook could also block any outgoing transactions to non-royalties hook accounts. Any minting app could prevent a transaction if the user does not have the royalties hook. This hook would have very basic code and be lightweight on users' accounts and the network. This proposed royalty standard would be compatible with XLS-53 and the URI Token Remit hook. Brokers and a royalties hook could coexist.
 
 
 ## Collaberation 
@@ -198,9 +200,9 @@ I want to see this hook used and upgraded. We are offering advice on Hook instal
 
 ## Disclainmer
 
-This hook is stable and user freindly with alot of catchs, error messages, and notes. With that being said this hook was written for the Xahau Hackaton on a timeframe and is still in an expermental state. I know there is many ways to clean up and improve this hook. There is serval upgrades that will eventully be edited into the code. If you find any major vulnerabilities please reach out to me asap so I can patch them. Cbot Labs INC. and specially Cody the author of this code do not acccpt any liablty for the use of this hook. Use this hook at your own expence. Anyone using this hook should do so on testnet until they fully understand its fuction.
+This hook is stable and user-friendly with a lot of catches, error messages, and notes. With that being said, this hook was written for the Xahau Hackathon on a timeframe and is still in an experimental state. I know there are many ways to clean up and improve this hook. There are several upgrades that will eventually be edited into the code. If you find any major vulnerabilities, please reach out to me ASAP so I can patch them. Cbot Labs INC. and specifically Cody, the author of this code, do not accept any liability for the use of this hook. Use this hook at your own expense. Anyone using this hook should do so on testnet until they fully understand its function.
 
 
-## Last Thoughts
+## Final Thoughts
 
 Created by [@cbot_xrpl](https://x.com/cbot_xrpl). You can find more of my projects on [cbotlabs.com](https://www.cbotlabs.com). Speical thanks to [@ekiserrepe](https://x.com/ekiserrepe) for insperation with the forwarder hook and [@angell_denis](https://x.com/angell_denis) for getting me started with C. Thank you to all of the Xahau commuinty for giving me welcoming place to build and learn !!
