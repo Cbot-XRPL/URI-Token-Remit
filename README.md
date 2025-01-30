@@ -3,7 +3,7 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
+This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. This hook is complaint with current NFT standard XLS-53 and will work with the upcoming Bidds marketplace. If you want roytlies paid on your sales you will also need that hook when it become available. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
 
 ## What Does This Hook do
 
@@ -35,7 +35,7 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 **COUNT:**|A optional param to adjsut the hooks counter state. This param does not need to be used in most cases the hook will keep count when adding and removing state. If you reset a certain peice of state or deal with hook errors there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the  XRPL WIN Hook Tracking Tools
 |**PASS:**|A numerical passkey. If a hook is locked this param must be submited as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a unit64 before use in hook params.|
 |**BROKER:**|An optiona feild for a Xahau broker to handle all your URI token transactions and roylaties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to it hexed verison before use in the hook params.|
-|**ROYLTIES:**| The % amount you want to charge for roylaties. Use the XRPL Hex Visualizer Tool to convert your number to xlf decimal.|
+|**ROYLTIES:**| The % amount you want to charge for roylaties. This need to be a number 1-100 for the precentage you want to charge. Use the XRPL Hex Visualizer Tool to convert your number to a unit64.|
 |**DEL**| List the number of the hook state you want to delete.|
 
 ## Hook State Number Keys
@@ -92,14 +92,15 @@ These are the number keys to param data stored in hook state. When debuging and 
       HookParameters: [
         {
           HookParameter: {
-            HookParameterName: "414444",
-            HookParameterValue: "D53F733E54B866B9FBDB85762071832B03A56C76",
+            HookParameterName: "555249",
+            HookParameterValue: 
+"697066733A2F2F62616679626569656F797A337367687232377962696D687373676168616261356F6636616E6D6C646A6A746D75667378656E3232676D656E6A6C342F323533342E6A736F6E",
           },
         },
         {
           HookParameter: {
             HookParameterName: "4E554D",
-            HookParameterValue: "00",
+            HookParameterValue: "0000000000000001",
           },
         },
       ],
@@ -109,13 +110,13 @@ These are the number keys to param data stored in hook state. When debuging and 
 
 ## How to install the URI Token Remit Hook?
 
-The Hookhash is 1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494
+The Hookhash is CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812
 
 1. You can do it with the tool at [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
 2. Or you can do it sending the transaction below:
 
-Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy transaction happens. You can verify iyour HookOn value (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE) in this website: [Richards Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
+Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy transaction happens. You can verify iyour HookOn value (0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe) in this website: [Richards Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
     const prepared = {
       "TransactionType": "SetHook",
@@ -124,9 +125,9 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494",
-            "HookNamespace": "0000000000000000000000000000000000000000000000000000000000000000",
-            "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE",
+            "HookHash": "CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812",
+            "HookNamespace": "4FF9961269BF7630D32E15276569C94470174A5DA79FA567C0F62251AA9A36B9",
+            "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
         }
       ],
@@ -183,7 +184,7 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 
 ## NFT Metadata and Roytlies
 
-This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees. We will be relaing a NFT and Roytlies proposal ourselfs coving what we belive is the ideal design for a roytlies hook and how broker should handle that hook. Our proposal will be based on the basic idea that users will install the hook on their account and during a URI token sale the hook will reads the royties from hook state and pay it accordingly. If the user trys to buy or sell to a person without the roytles hook they will be blocked. Any issuing software can also check for this hook if they want to charge roylties. This will create a free trade NFT market where paying roytlies is inescapable for the user.
+This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees.
 
 ## Collaberation 
 
