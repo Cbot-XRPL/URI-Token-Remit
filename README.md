@@ -92,14 +92,15 @@ These are the number keys to param data stored in hook state. When debuging and 
       HookParameters: [
         {
           HookParameter: {
-            HookParameterName: "414444",
-            HookParameterValue: "D53F733E54B866B9FBDB85762071832B03A56C76",
+            HookParameterName: "555249",
+            HookParameterValue: 
+"697066733A2F2F62616679626569656F797A337367687232377962696D687373676168616261356F6636616E6D6C646A6A746D75667378656E3232676D656E6A6C342F323533342E6A736F6E",
           },
         },
         {
           HookParameter: {
             HookParameterName: "4E554D",
-            HookParameterValue: "00",
+            HookParameterValue: "0000000000000001",
           },
         },
       ],
@@ -109,13 +110,13 @@ These are the number keys to param data stored in hook state. When debuging and 
 
 ## How to install the URI Token Remit Hook?
 
-The Hookhash is 1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494
+The Hookhash is CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812
 
 1. You can do it with the tool at [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
 2. Or you can do it sending the transaction below:
 
-Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy transaction happens. You can verify iyour HookOn value (FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE) in this website: [Richards Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
+Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy transaction happens. You can verify iyour HookOn value (0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe) in this website: [Richards Hook On Calc](https://richardah.github.io/xrpl-hookon-calculator/)
 
     const prepared = {
       "TransactionType": "SetHook",
@@ -124,9 +125,9 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "1A9D1EEA98A9BE3C45A35872E51E36B6E73CBB7033A96CE0D98DB484215E0494",
-            "HookNamespace": "0000000000000000000000000000000000000000000000000000000000000000",
-            "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFFF7FFFFFBFFFFE",
+            "HookHash": "CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812",
+            "HookNamespace": "4FF9961269BF7630D32E15276569C94470174A5DA79FA567C0F62251AA9A36B9",
+            "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
         }
       ],
