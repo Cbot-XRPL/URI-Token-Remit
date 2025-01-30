@@ -34,7 +34,6 @@ To add and remove state for this hook you will use ```TTINVOKE``` transactions o
 |**LOCK:**|A numerical passkey. If this param is set, hook users will have to submit the PASS param to unlock and use the hook's functionality. Use the XRPL Hex Visualizer to convert your LOCK number to a uint64 before use in hook params. This can be updated as needed.|  
 |**COUNT:**|An optional param to adjust the hook's counter state. This param does not need to be used in most cases; the hook will keep count when adding and removing state. If you reset a certain piece of state or deal with hook errors, there is a chance your counter has gone out of sync. Ensure the COUNT param is set to the total number of URIs in your hook state. You can see the counter in the XRPL WIN Hook Tracking Tools.|  
 |**PASS:**|A numerical passkey. If a hook is locked, this param must be submitted as a param with a payment transaction to unlock it. Use the [XRPL Hex Visualizer](https://transia-rnd.github.io/xrpl-hex-visualizer/) to convert your PASS number to a uint64 before use in hook params.|  
-|**BROKER:**|An optional field for a Xahau broker to handle all your URI token transactions and royalties. Use the XRPL Hex Visualizer Tool to convert your Xahau address to its hexed version before use in the hook params.|  
 |**ROYALTIES:**|The % amount you want to charge for royalties. This needs to be a number 1-99 for the percentage you want to charge. Decimals are not allowed in this build. Use the XRPL Hex Visualizer Tool to convert your number to a uint64.|  
 |**DEL**|List the number of the hook state you want to delete.|  
 
@@ -47,7 +46,7 @@ These are the number keys to param data stored in hook state. When debuging and 
 |COST|999997| 00000000000F423D|
 |LOCK|999996| 00000000000F423C|
 |COUNT|999995| 00000000000F423B|
-|ROY|ROYALTY| 00000000000F423B|
+|ROY|ROYALTY| 524F59414C5459|
 
 
 
