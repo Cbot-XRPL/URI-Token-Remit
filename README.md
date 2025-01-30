@@ -3,7 +3,7 @@
 ## URI Token Mint Hook for Xahau Network
 
 
-This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. This hook is complaint with current NFT standard XLS-53 and will work with the upcoming Bidds marketplace. If you want roytlies paid on your sales you will also need that hook when it become available. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
+This hook is designed to automatically distribute URI Tokens (RWA or NFT) based on the Xahau hook rule engine. This hook could potentially replace a transfer agent, allowing users a secure way to get assets without a broker. This hook will essentially allow you to register unique assets for distribution at a Xahau address. Some potential assets that could be distributed based on this hook are art, real estate, tickets, and digital products. This hook is complaint with current NFT standard XLS-53 and will work with the upcoming Bidds marketplace. If you want roytlies paid on your sales you will also need Broker || Royalty hook when it become available. You can find our Xahau Art Vault example of this hook on Mainnet at [address] and our Concert Rental Tickets on testnet installed at [address]
 
 ## What Does This Hook do
 
@@ -110,7 +110,7 @@ These are the number keys to param data stored in hook state. When debuging and 
 
 ## How to install the URI Token Remit Hook?
 
-The Hookhash is CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812
+The Hookhash is AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E
 
 1. You can do it with the tool at [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
@@ -125,8 +125,8 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "CDC1F6D821926DC3C4D0052E4DA15631EE224D38205DA54BA63D81B493DB5812",
-            "HookNamespace": "4FF9961269BF7630D32E15276569C94470174A5DA79FA567C0F62251AA9A36B9",
+            "HookHash": "AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E",
+            "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
             "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
         }
@@ -134,7 +134,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       ...networkInfo.txValues,
     };
 
-## How to uninstall the Forwarder Hook on Mainnet/Testnet?
+## How to uninstall the URI Token Remit Hook on Mainnet/Testnet?
 
     const prepared = {
       "TransactionType": "SetHook",
@@ -155,7 +155,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
 
 
 
-## How to install the Forwarder Hook on Mainnet?
+## How to install the URI Token Remit Hook on Mainnet?
 
 Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF490A3992CADB3CD5CCE851FB358B2DE299ABE30DB9E.
 
@@ -182,9 +182,14 @@ Same as Testnet but changing the hookhash. The Hookhash is D22582E8BAF59FC682DEF
 ```
 
 
-## NFT Metadata and Roytlies
+## Current NFT Metadata and Roytlies
 
-This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a broker hook will push your NFT offers through a broker and ensure your royties are paid. Beware a broker controls the trade of your asset and may charge fees.
+This hook is compliant with the Royties and brokerage standard XLS-53d standard. Setting a Royalty param on this hook will ensure a broker can be prepared to read pay it accordingly. Beware a broker controls the trade of your asset and may charge fees. 
+
+## Promosed NFT Metadata and Roytlies
+
+I propose We write a hook that on URI token purchase, the issuer hook state is read, fee paid, and NFt transfer finished. The hook installed it could also block anyout going TX to non royties hook accounts. Any minting app could block a transaction if the user does not have the roylies hook. This hook would have a very basic code and be very light weight on users accounts and the network. This proposed roytie standard would be compadible with XLS-53 and this URI Token Remit hook. Brokers and a Roylties hook could co exist.
+
 
 ## Collaberation 
 
@@ -193,7 +198,7 @@ I want to see this hook used and upgraded. We are offering advice on Hook instal
 
 ## Disclainmer
 
-This hook is stable and user freindly with alot of catchs, error messages, and notes. With that being said this hook was written for the Xahau Hackaton on a timeframe. I know there is many ways to clean up and improve this hook. There is serval upgrades that will eventully be edited into the code. If you find any major vulnerabilities please reach out to me asap so I can patch them. Cbot Labs INC. and specially Cody the author of this code do not acccpt any liablty for the use of this hook. Use this hook at your own expence. Anyone using this hook should do so on testnet until they fully understand its fuction.
+This hook is stable and user freindly with alot of catchs, error messages, and notes. With that being said this hook was written for the Xahau Hackaton on a timeframe and is still in an expermental state. I know there is many ways to clean up and improve this hook. There is serval upgrades that will eventully be edited into the code. If you find any major vulnerabilities please reach out to me asap so I can patch them. Cbot Labs INC. and specially Cody the author of this code do not acccpt any liablty for the use of this hook. Use this hook at your own expence. Anyone using this hook should do so on testnet until they fully understand its fuction.
 
 
 ## Last Thoughts
