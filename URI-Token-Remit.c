@@ -174,27 +174,6 @@ uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 
-// Configure ROYALTY PER XLS-53 ----------------------------------------------------------------
-
-uint8_t roy_buf[8];
-uint8_t roy_key[3] = { 'R', 'O', 'Y' };
-uint8_t royalty_key[7] = { 'R', 'O', 'Y', 'A', 'L', 'T', 'Y' };
-
-int8_t isRoyalties = otxn_param(roy_buf, 8, roy_key, sizeof(roy_key));
-if (isRoyalties < 0)
-    rollback(SBUF("Error: Could not retrieve royalty param!"), 1);
-
-uint64_t roy_int = UINT64_FROM_BUF(roy_buf);
-int64_t small_amount = float_set(-1, roy_int);
-
-TRACEHEX(roy_buf);
-TRACEVAR(roy_int);
-TRACEXFL(small_amount);
-
-if (state_set(&small_amount, sizeof(small_amount), royalty_key, sizeof(royalty_key)) < 0)
-    rollback(SBUF("Error: Could not set ROY state!"), 1);
-
-accept(SBUF("Success: Set the ROY state."), __LINE__);
 
 // Configure URIL and URI ----------------------------------------------------------------
 
@@ -300,30 +279,6 @@ if (state_set(SBUF(&count_param), SBUF(conum_buf)) < 0)
 accept(SBUF("Success: Set the COUNT state."), __LINE__);
 
 }
-
-
-// HookOn: Invoke Set COST State -----------------------------------------------------------------------------------------
-
-
-if (tt == 99 && isCost > 0){ 
-
-TRACEHEX(cost_buf);
-
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(cost_buf), SBUF(cnum_buf)) < 0)
-        rollback(SBUF("Error: Could not set COST state!"), 1);
-
-accept(SBUF("Success: Set the COST state."), __LINE__);
-
-}
-
-
-
-
-
-
-
-
 
 
 // HookOn: Invoke Set URIL State -----------------------------------------------------------------------------------------
