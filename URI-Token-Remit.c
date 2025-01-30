@@ -174,24 +174,27 @@ uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 
+// Configure ROYALTY PER XLS-53 ----------------------------------------------------------------
+
 uint8_t roy_buf[8];
 uint8_t roy_key[3] = { 'R', 'O', 'Y' };
-int8_t isRoyalties = otxn_param(SBUF(roy_buf), SBUF(roy_key));
+uint8_t royalty_key[7] = { 'R', 'O', 'Y', 'A', 'L', 'T', 'Y' };
+
+int8_t isRoyalties = otxn_param(roy_buf, 8, roy_key, sizeof(roy_key));
+if (isRoyalties < 0)
+    rollback(SBUF("Error: Could not retrieve royalty param!"), 1);
+
 uint64_t roy_int = UINT64_FROM_BUF(roy_buf);
 int64_t small_amount = float_set(-1, roy_int);
+
 TRACEHEX(roy_buf);
 TRACEVAR(roy_int);
 TRACEXFL(small_amount);
 
+if (state_set(&small_amount, sizeof(small_amount), royalty_key, sizeof(royalty_key)) < 0)
+    rollback(SBUF("Error: Could not set ROY state!"), 1);
 
-
-
-uint8_t bro_buf[20];
-uint8_t bro_key[3] = { 'B', 'R', 'O'};
-int8_t isBroker = otxn_param(SBUF(bro_buf), SBUF(bro_key));
-TRACEHEX(bro_buf);
-
-
+accept(SBUF("Success: Set the ROY state."), __LINE__);
 
 // Configure URIL and URI ----------------------------------------------------------------
 
