@@ -174,12 +174,6 @@ uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 
-uint8_t roy_buf[8];
-uint8_t roy_key[3] = { 'R', 'O', 'Y' };
-int8_t isRoyalties = otxn_param(SBUF(roy_buf), SBUF(roy_key));
-uint64_t roy_int = UINT64_FROM_BUF(roy_buf);
-int64_t roy_small_amount = float_set(-2, roy_int);
-
 
 // Configure URIL and URI ----------------------------------------------------------------
 
@@ -283,25 +277,6 @@ if (state_set(SBUF(&count_param), SBUF(conum_buf)) < 0)
         rollback(SBUF("Error: Could not set COUNT state!"), 1);
 
 accept(SBUF("Success: Set the COUNT state."), __LINE__);
-
-}
-
-
-// HookOn: Invoke Set Royalties State -----------------------------------------------------------------------------------------
-
-
-if (tt == 99 && isRoyalties > 0){ 
-
-TRACEHEX(roy_buf);
-TRACEVAR(roy_int);
-TRACEXFL(roy_small_amount);
-
-
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set(SBUF(roy_buf), SBUF(cnum_buf)) < 0)
-        rollback(SBUF("Error: Could not set Roylties state!"), 1);
-
-accept(SBUF("Success: Set the COST state."), __LINE__);
 
 }
 
