@@ -126,7 +126,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E",
+            "HookHash": "73C4E14DC5A70C07C194077FDC831AD86E115A52C651BB437F406ACE1B027174",
             "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
             "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
@@ -172,7 +172,7 @@ Same as Testnet but changing the hookhash. The Hookhash is AC77D68A99C6433CC9507
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E",
+            "HookHash": "73C4E14DC5A70C07C194077FDC831AD86E115A52C651BB437F406ACE1B027174",
             "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
             "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
