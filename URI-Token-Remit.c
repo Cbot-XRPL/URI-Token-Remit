@@ -304,7 +304,7 @@ accept(SBUF("Success: Set the URIL state."), __LINE__);
 // HookOn: Invoke Set URI State -----------------------------------------------------------------------------------------
 
 
-if (tt == 99 && isUri2 > 0){
+if (tt == 99 && isUri1 > 0){
 
 TRACEVAR(uri_buffer);	
 TRACEVAR(uri_buffer);	
