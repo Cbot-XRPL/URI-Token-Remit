@@ -390,7 +390,9 @@ TRACEHEX(cbuf)
 // fetch the sent Amount
 unsigned char amount_buffer[48];
 int64_t amount_len = otxn_field(SBUF(amount_buffer), sfAmount);
-TRACEHEX(amount_buffer);
+int64_t otxn_drops = AMOUNT_TO_DROPS(amount_buffer);
+double xah_amount = (double)otxn_drops / 1000000.0;  // Convert to XRP
+TRACEVAR(xah_amount);
 
 //Ensure the payment is XAH
 if (amount_len != 8)
@@ -401,10 +403,10 @@ rollback(SBUF("Error: This hook only accepts XAH!"), __LINE__);
 //recontruct amount sent and cost to compare them
 uint64_t reconstructed_cbuf_value = UINT64_FROM_BUF(cbuf);
 TRACEVAR(reconstructed_cbuf_value);
-uint64_t reconstructed_amount_value = UINT64_FROM_BUF(amount_buffer);
+
 
 //Compare payment amount and cost
-if( reconstructed_amount_value == reconstructed_cbuf_value){
+if( xah_amount != reconstructed_cbuf_value){
 rollback(SBUF("Error: Incorrect payment amount!"), __LINE__);
 }
 TRACESTR("Payment amounts match.");
