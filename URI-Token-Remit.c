@@ -213,6 +213,11 @@ if(tt == 99 && !equal){
    rollback(SBUF("Error: Only the owner of this hook can change its settings!"), 1);
 };
 
+//block lock payments
+if(tt == 00 && !equal && isLock){
+   rollback(SBUF("Error: Only the owner of this hook can change its settings!"), 1);
+};
+
 
 // Lock state buffer
  uint8_t lbuf[8]={0};
