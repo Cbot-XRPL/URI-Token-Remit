@@ -111,7 +111,7 @@ These are the number keys to param data stored in hook state. When debuging and 
 
 ## How to install the URI Token Remit Hook?
 
-The Hookhash is AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E
+The Hookhash is 908BC0E1C6FA8B422B8F91A6A580FADEE73B94E4CB08199724A166CB7A650CCE
 
 1. You can do it with the tool at [XRPLWin Hook Install Tool](https://xahau-testnet.xrplwin.com/tools/hook/from-hash)
 
@@ -126,7 +126,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
       "Hooks": [
         {
           "Hook": {
-            "HookHash": "B4C0C2CB6122E6F3017006B1942545C9C547ED41DC26DD98AC2B533B1772D366",
+            "HookHash": "908BC0E1C6FA8B422B8F91A6A580FADEE73B94E4CB08199724A166CB7A650CCE",
             "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
             "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
@@ -158,7 +158,7 @@ Set the hook to activate (HookOn) is when a Invoke, Payment and URIToken_Buy tra
 
 ## How to install the URI Token Remit Hook on Mainnet?
 
-Same as Testnet but changing the hookhash. The Hookhash is AC77D68A99C6433CC9507FA9D6FCD32FBF4DB1EDF757EB73950606FE08CF269E.
+Same as Testnet but changing the hookhash. The Hookhash is 908BC0E1C6FA8B422B8F91A6A580FADEE73B94E4CB08199724A166CB7A650CCE.
 
 1. You can do it by [XRPLWin Hook Install Tool](https://xahau.xrplwin.com/tools/hook/from-hash)
 
@@ -172,7 +172,7 @@ Same as Testnet but changing the hookhash. The Hookhash is AC77D68A99C6433CC9507
       "Hooks": [
         {
           "Hook": {
-           "HookHash": "B4C0C2CB6122E6F3017006B1942545C9C547ED41DC26DD98AC2B533B1772D366",
+           "HookHash": "908BC0E1C6FA8B422B8F91A6A580FADEE73B94E4CB08199724A166CB7A650CCE",
            "HookNamespace": "0204DAD98F5ADB07B8CB073BFBCC1B331A2589ED7744C644577A024E0D98A220",
             "HookOn": "0xfffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffbffffe",
           }
