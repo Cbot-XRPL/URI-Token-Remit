@@ -62,9 +62,9 @@ uint8_t txn[60000] =
     if (otxn_field(DTAG_OUT, 4, sfSourceTag) == 4) \
         *(DTAG_OUT - 1) = 0x2EU; \
     uint32_t fls = (uint32_t)ledger_seq() + 1; \ 
-    *((uint32_t *)(FLS_OUT)) = FLIP_ENDIAN(fls); \ 
+    *((uint32_t *)(FLS_OUT)) = FLIP_ENDIAN_32(fls); \ 
     uint32_t lls = fls + 4; \ 
-    *((uint32_t *)(LLS_OUT)) = FLIP_ENDIAN(lls); \
+    *((uint32_t *)(LLS_OUT)) = FLIP_ENDIAN_32(lls); \
     ACCOUNT_TO_BUF(HOOK_ACC, account_buffer); \ 
     ACCOUNT_TO_BUF(OTX_ACC, dest_buffer); \ 
     URI_TO_BUF(URI_OUT, uri_buffer, uri_len) \
@@ -210,7 +210,14 @@ int8_t isUri2 = otxn_param(uri_buffer + 1,reconstructed_uril_value, SBUF(uri_key
 int equal = 0;
 BUFFER_EQUAL(equal, otx_acc, hook_acct, 20);
 if(tt == 99 && !equal){
+    TRACEVAR(tt);
    rollback(SBUF("Error: Only the owner of this hook can change its settings!"), 1);
+};
+
+//block lock payments
+if(tt == 00 && !equal && isLock > 0){
+    TRACEVAR(tt);
+   rollback(SBUF("Error: Only the owner of this hook can change its settings!!"), 2);
 };
 
 
