@@ -187,12 +187,11 @@ int64_t small_amount = float_set(-1, roy_int);
 
 
 
-// Configure URIL and URI ----------------------------------------------------------------
+// Configure URIL, URI, DIGEST ----------------------------------------------------------------
 uint8_t uril_buf[8];
 uint8_t uril_key[4] = { 'U', 'R', 'I', 'L' };
 int8_t isUril = otxn_param(SBUF(uril_buf), SBUF(uril_key));
 uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
-
 
 // URIL state buffer
  uint8_t ulbuf[8]={0};
@@ -201,13 +200,15 @@ uint64_t uri_len = UINT64_FROM_BUF(uril_buf);
 int8_t hasUril = state(SBUF(ulbuf), SBUF(ulnum_buf));
 uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
 
+//uri param
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
 int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
 
+//digest param
 uint8_t uri_buffer[32];
 int8_t uri_key[6] = { 'D', 'I', 'G', 'E', 'S', 'T' };
-int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
+int8_t isDig = otxn_param(SBUF(dig_buffer), SBUF(dig_key));
 
 //check if has a uril prior to adding uri
 if (hasUril < 0 && isUri1 > 0)
@@ -343,6 +344,23 @@ if (state_set(SBUF(uri_buffer), SBUF(num_buf)) < 0)
 
 accept(SBUF("Success: Set a URI state."), __LINE__);
 }
+
+    
+// HookOn: Invoke Set DIGEST State -----------------------------------------------------------------------------------------
+
+
+if (tt == 99 && isDig > 0){
+
+TRACEVAR(dig_buffer);	
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+if (state_set_forgin(SBUF(dig_buffer), SBUF(num_buf)) < 0)
+		rollback(SBUF("Error: could not set the Digest state!"), 1);
+
+accept(SBUF("Success: Set a Digest state."), __LINE__);
+}
+
+
 
 
 // HookOn: Invoke Delete State -----------------------------------------------------------------------------------------
