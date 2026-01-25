@@ -354,7 +354,7 @@ if (tt == 99 && isDig > 0){
 TRACEVAR(dig_buffer);	
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_set_forgin(SBUF(dig_buffer), SBUF(num_buf)) < 0)
+if (state_foreign_set(SBUF(dig_buffer), SBUF(num_buf), SBUF(digest_index_ns)) < 0)
 		rollback(SBUF("Error: could not set the Digest state!"), 1);
 
 accept(SBUF("Success: Set a Digest state."), __LINE__);
