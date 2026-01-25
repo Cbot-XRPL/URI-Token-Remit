@@ -83,6 +83,17 @@ uint8_t txn[60000] =
 // clang-format on
 
 
+// digest namespace Cbot-XRPL:URI-Token-Remit:DigestIndex
+uint8_t digest_index_ns[32] = {
+    0xC4U, 0xDBU, 0x32U, 0xC8U, 0xC0U, 0x33U, 0x3BU, 0x27U,
+    0xA6U, 0x2BU, 0x83U, 0x31U, 0x8BU, 0x33U, 0xE3U, 0x93U,
+    0x27U, 0x87U, 0x5AU, 0x46U, 0x66U, 0x3BU, 0xA5U, 0xEEU,
+    0x43U, 0xC3U, 0xC5U, 0x49U, 0x70U, 0xF3U, 0x48U, 0x6EU
+};
+
+
+
+
 // START OF THE HOOK ACTIVATION -----------------------------------------------------------------------------------------
 
 
@@ -192,6 +203,10 @@ uint64_t reconstructed_uril_value = UINT64_FROM_BUF(ulbuf);
 
 uint8_t uri_buffer[256];
 int8_t uri_key[3] = { 'U', 'R', 'I' };
+int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
+
+uint8_t uri_buffer[32];
+int8_t uri_key[6] = { 'D', 'I', 'G', 'E', 'S', 'T' };
 int8_t isUri1 = otxn_param(SBUF(uri_buffer), SBUF(uri_key));
 
 //check if has a uril prior to adding uri
