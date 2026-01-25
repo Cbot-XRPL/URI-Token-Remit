@@ -354,7 +354,7 @@ if (tt == 99 && isDig > 0){
 TRACEVAR(dig_buffer);	
 
    #define SBUF(str) (uint32_t)(str), sizeof(str)
-if (state_foreign_set(SBUF(dig_buffer), SBUF(num_buf), SBUF(digest_index_ns)) < 0)
+if (state_foreign_set(SBUF(dig_buffer), SBUF(num_buf), digest_index_ns, 32, hook_accid + 12, 20 )) < 0)
 		rollback(SBUF("Error: could not set the Digest state!"), 1);
 
 accept(SBUF("Success: Set a Digest state."), __LINE__);
@@ -373,6 +373,11 @@ TRACEHEX(del_buf);
    #define SBUF(str) (uint32_t)(str), sizeof(str)
 if (state_set(0,0, SBUF(del_buf)) < 0)
 		rollback(SBUF("Error: could not delete state!"),__LINE__);
+
+   #define SBUF(str) (uint32_t)(str), sizeof(str)
+state_foreign_set(0,0, SBUF(del_buf),digest_index_ns 32, hook_accid + 12, 20 );
+	
+
 
  TRACEHEX(count);
 //add to counter and set counter state
