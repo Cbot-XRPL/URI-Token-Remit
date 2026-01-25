@@ -41,7 +41,8 @@ uint8_t txn[60000] =
 
 /*   3, 234 */  0xE0U, 0x5CU, 0x75U,
 /*   1, 237 */  0xE1U,
-/*   0, 238 */                
+/*   0, 238 */     
+/*  34, 292 */   0x50U, 0x15U,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,            /* digest   */           
 };
 // clang-format on
 
@@ -55,6 +56,7 @@ uint8_t txn[60000] =
 #define OTX_ACC (txn + 98U)
 #define URI_OUT (txn + 237U)
 #define EMIT_OUT (txn + 118U)
+#define DIGEST_OUT (txn + 293U)
 
 // clang-format off prepare remit tx
 #define PREPARE_REMIT_TXN(account_buffer, dest_buffer, uri_buffer, uri_len) do { \ 
